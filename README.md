@@ -15,7 +15,7 @@ O projeto utiliza um **FlatSat** — montagem de subsistemas eletrônicos interl
 ## Áreas de desenvolvimento
 
 | Área | Aplicações no laboratório |
-|---|---|
+|:---:|:---:|
 | **CubeSat e nanosatélites** | Arquitetura de subsistemas, interfaces, requisitos e integração de protótipos |
 | **FlatSat e sistemas embarcados** | Microcontroladores STM32/ESP32, firmware, barramentos, sensores e aquisição de dados |
 | **Telemetria e comunicações** | Formatos de pacotes, sequência, integridade, perdas, latência e enlaces experimentais |
