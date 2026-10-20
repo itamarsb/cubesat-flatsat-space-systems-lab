@@ -83,3 +83,13 @@ A etapa inicial utiliza simulação e comunicação serial/USB. Ensaios com radi
 ---
 
 **Autor:** Itamar de Sá Britto Júnior · Engenharia de Computação · Sistemas Embarcados · Telemetria · Observabilidade
+
+---
+
+## 📈 Repository Metrics
+
+<p align="center">
+
+<a href="http://s05.flagcounter.com/more/CR0"><img src="https://s05.flagcounter.com/map/CR0/size_l/txt_000000/border_CCCCCC/pageviews_1/viewers_0/flags_0/" alt="Flag Counter" border="0"></a>
+
+</p>
