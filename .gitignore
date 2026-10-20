@@ -1,0 +1,43 @@
+# Pastas e documentos locais não destinados ao repositório
+/private/
+/personal/
+/docs/planning/
+*.pdf
+*.doc
+*.docx
+*.odt
+*.ppt
+*.pptx
+*.xls
+*.xlsx
+
+# Credenciais e configurações locais
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+secrets.json
+
+# IDEs, Python e saídas temporárias
+.vscode/
+.idea/
+__pycache__/
+.pytest_cache/
+.venv/
+venv/
+*.pyc
+.DS_Store
+Thumbs.db
+*.tmp
+*.log
+
+# Capturas e conjuntos grandes são adicionados apenas quando revisados
+*.pcap
+*.pcapng
+*.iq
+*.wav
+*.bin
