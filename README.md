@@ -26,7 +26,7 @@ O projeto utiliza um **FlatSat** — montagem de subsistemas eletrônicos interl
 ## Laboratórios
 
 | Lab | Tema | Estado |
-|---|---|---|
+|:---:|:---:|:---:|
 | [S00](labs/00-bench-baseline/README.md) | Requisitos, instrumentos e arquitetura da bancada | Planejado |
 | [S01](labs/01-telemetry-simulation/README.md) | Simulação e integridade de pacotes de telemetria | Planejado |
 | [S02](labs/02-embedded-flatsat/README.md) | FlatSat com microcontrolador e aquisição de sensores | Planejado |
