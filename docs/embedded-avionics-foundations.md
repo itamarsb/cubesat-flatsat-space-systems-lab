@@ -3,7 +3,7 @@
 Os conhecimentos abaixo dão suporte aos laboratórios CubeSat/FlatSat e à integração de subsistemas de bancada.
 
 | Área | Conteúdos relevantes |
-|---|---|
+|:---:|:---:|
 | Eletrônica | Leis de circuito, componentes passivos e ativos, fontes e proteção |
 | Instrumentação | Multímetro, osciloscópio, validação de sinais e incerteza de medição |
 | Microcontroladores | PIC, STM32, ESP32, ferramentas de compilação e depuração |
