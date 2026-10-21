@@ -5,7 +5,7 @@
 ## Progressão
 
 | Lab | Tema | Entregável de referência | Status |
-|---|---|---|---|
+|:---:|:---:|:---:|:---:|
 | S00 | Baseline de bancada | Diagrama, inventário, interfaces, riscos, critérios de aceite | Planejado |
 | S01 | Simulação de telemetria | Pacotes com versão e sequência, verificação de integridade, testes determinísticos | Planejado |
 | S02 | FlatSat embarcado | Firmware STM32/ESP32, leituras de sensores, captura serial, comparação com referência | Planejado |
