@@ -26,7 +26,7 @@ A **FlatSat** provides a bench-top arrangement of interconnected subsystems for 
 ## Laboratory roadmap
 
 | Lab | Topic | Status |
-|---|---|---|
+|:---:|:---:|:---:|
 | [S00](labs/00-bench-baseline/README.md) | Bench requirements and inventory | Planned |
 | [S01](labs/01-telemetry-simulation/README.md) | Telemetry simulation and packet integrity | Planned |
 | [S02](labs/02-embedded-flatsat/README.md) | Embedded FlatSat and sensors | Planned |
