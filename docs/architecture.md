@@ -5,7 +5,7 @@
 ## Componentes
 
 | Bloco | Responsabilidade |
-|---|---|
+|:---:|:---:|
 | Fonte simulada | Gerar telemetria e cenários de referência controlados |
 | FlatSat / subsistema embarcado | Executar firmware, adquirir sinais e produzir pacotes |
 | Transporte | Serial/USB na primeira fase; RF conduzida somente após revisão específica |
