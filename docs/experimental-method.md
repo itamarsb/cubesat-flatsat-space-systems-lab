@@ -7,7 +7,7 @@ Registrar configurações, procedimentos e resultados de forma que os experiment
 ## Informações mínimas por laboratório
 
 | Elemento | Registro |
-|---|---|
+|:---:|:---:|
 | Objetivo e hipótese | Questão técnica e comportamento esperado |
 | Topologia | Componentes, interfaces e diagrama |
 | Ambiente | Hardware real, firmware, versões, software e dependências |
