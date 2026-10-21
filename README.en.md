@@ -15,7 +15,7 @@ A **FlatSat** provides a bench-top arrangement of interconnected subsystems for 
 ## Technical scope
 
 | Area | Laboratory scope |
-|---|---|
+|:---:|:---:|
 | Small-satellite systems | CubeSat/nanosatellite subsystem architecture and prototype integration |
 | Embedded engineering | STM32/ESP32, sensors, firmware, interfaces and electrical measurements |
 | Telemetry | Packet formats, sequence numbers, error detection, losses and latency |
