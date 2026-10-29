@@ -1,6 +1,6 @@
 # CubeSat & FlatSat Space Systems Lab
 
-**CubeSats · Nanosatélites · FlatSat · CubeSats · Sistemas Embarcados · Telemetria · Segmento Terrestre · Observabilidade**
+**CubeSats · Nanosatélites · FlatSat · Sistemas Embarcados · Telemetria · Segmento Terrestre · Observabilidade**
 
 [English](README.en.md) · [Laboratórios](labs/README.md) · [Roadmap](docs/roadmap.md) · [Arquitetura](docs/architecture.md) · [Método experimental](docs/experimental-method.md)
 
