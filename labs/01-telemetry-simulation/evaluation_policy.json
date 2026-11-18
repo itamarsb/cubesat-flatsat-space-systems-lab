@@ -1,0 +1,162 @@
+{
+  "policy_version": 1,
+  "description": "Predefined software fixture expectations. Not a fault-classifier accuracy study.",
+  "expected_base_sequences": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "expected_source_id": 1,
+  "scenarios": {
+    "baseline": {
+      "intervention_type": null,
+      "generated_frames": 5,
+      "delivered_frames": 5,
+      "event_statuses": [
+        "first",
+        "in_order",
+        "in_order",
+        "in_order",
+        "in_order"
+      ],
+      "measurements": {
+        "received_frames": 5,
+        "valid_frames": 5,
+        "invalid_frames": 0,
+        "first_frames": 1,
+        "in_order_frames": 4,
+        "gap_events": 0,
+        "estimated_missing_on_gaps": 0,
+        "duplicate_frames": 0,
+        "out_of_order_frames": 0
+      },
+      "expected_intervention": null,
+      "invalid_reasons": {}
+    },
+    "drop": {
+      "intervention_type": "omit_before_receiver",
+      "generated_frames": 5,
+      "delivered_frames": 4,
+      "event_statuses": [
+        "first",
+        "in_order",
+        "gap",
+        "in_order"
+      ],
+      "measurements": {
+        "received_frames": 4,
+        "valid_frames": 4,
+        "invalid_frames": 0,
+        "first_frames": 1,
+        "in_order_frames": 2,
+        "gap_events": 1,
+        "estimated_missing_on_gaps": 1,
+        "duplicate_frames": 0,
+        "out_of_order_frames": 0
+      },
+      "expected_intervention": {
+        "type": "omit_before_receiver",
+        "sequence": 2,
+        "source_index": 2
+      },
+      "invalid_reasons": {}
+    },
+    "duplicate": {
+      "intervention_type": "repeat_frame",
+      "generated_frames": 5,
+      "delivered_frames": 6,
+      "event_statuses": [
+        "first",
+        "in_order",
+        "in_order",
+        "duplicate",
+        "in_order",
+        "in_order"
+      ],
+      "measurements": {
+        "received_frames": 6,
+        "valid_frames": 6,
+        "invalid_frames": 0,
+        "first_frames": 1,
+        "in_order_frames": 4,
+        "gap_events": 0,
+        "estimated_missing_on_gaps": 0,
+        "duplicate_frames": 1,
+        "out_of_order_frames": 0
+      },
+      "expected_intervention": {
+        "type": "repeat_frame",
+        "sequence": 2,
+        "insert_at": 3
+      },
+      "invalid_reasons": {}
+    },
+    "reorder": {
+      "intervention_type": "swap_frames",
+      "generated_frames": 5,
+      "delivered_frames": 5,
+      "event_statuses": [
+        "first",
+        "in_order",
+        "gap",
+        "out_of_order",
+        "in_order"
+      ],
+      "measurements": {
+        "received_frames": 5,
+        "valid_frames": 5,
+        "invalid_frames": 0,
+        "first_frames": 1,
+        "in_order_frames": 2,
+        "gap_events": 1,
+        "estimated_missing_on_gaps": 1,
+        "duplicate_frames": 0,
+        "out_of_order_frames": 1
+      },
+      "expected_intervention": {
+        "type": "swap_frames",
+        "source_indices": [
+          2,
+          3
+        ]
+      },
+      "invalid_reasons": {}
+    },
+    "corrupt": {
+      "intervention_type": "flip_payload_bit",
+      "generated_frames": 5,
+      "delivered_frames": 5,
+      "event_statuses": [
+        "first",
+        "in_order",
+        "invalid",
+        "gap",
+        "in_order"
+      ],
+      "measurements": {
+        "received_frames": 5,
+        "valid_frames": 4,
+        "invalid_frames": 1,
+        "first_frames": 1,
+        "in_order_frames": 2,
+        "gap_events": 1,
+        "estimated_missing_on_gaps": 1,
+        "duplicate_frames": 0,
+        "out_of_order_frames": 0
+      },
+      "expected_intervention": {
+        "type": "flip_payload_bit",
+        "sequence": 2,
+        "source_index": 2,
+        "byte_index": 7,
+        "xor_mask": "0x01",
+        "recalculate_crc": false
+      },
+      "invalid_reasons": {
+        "2": "CRC mismatch"
+      }
+    }
+  }
+}

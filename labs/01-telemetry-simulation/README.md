@@ -18,6 +18,9 @@ Esta primeira iteração é **exclusivamente uma simulação local em Python**. 
 | `scenarios.py` | Gerador de cinco cenários determinísticos e gabarito das intervenções |
 | `run_scenarios.py` | Execução de um ou cinco cenários, separando observações e gabarito em arquivos JSON |
 | `tests/test_scenarios.py` | Testes da separação dos registros, dos resultados e da prevenção de sobrescrita |
+| `evaluation_policy.json` | Política versionada com contadores, estados e intervenções esperados para os cinco cenários |
+| `evaluate_scenarios.py` | Avaliador pós-execução: consistência, conformidade e tabela-resumo |
+| `tests/test_evaluate_scenarios.py` | Testes de conformidade, divergência, inconsistência e bloqueio de sobrescrita |
 | `tests/test_experiment.py` | Testes do relatório, contadores, SHA-256 e proteção contra sobrescrita |
 | `tests/test_packet.py` | Testes automatizados offline com a biblioteca padrão `unittest` |
 
@@ -123,6 +126,34 @@ Os dois arquivos compartilham `run_id`, `scenario_id` e `checksums.input_frames_
 
 O registro de verdade é independente do diagnóstico quanto ao fluxo de dados, mas ambas as partes executam no mesmo processo de simulação e ainda não constituem validação externa ou referência experimental independente. A análise comparativa com métricas de acerto por classe fica para uma etapa posterior.
 
+### Avaliação pós-execução e critérios definidos
+
+A política versionada `evaluation_policy.json` registra os resultados esperados para os cinco cenários determinísticos, inclusive contadores, sequência de estados, razão de rejeição de quadro inválido e os detalhes da intervenção conhecida pelo gerador. O avaliador lê separadamente `observations.json` e `ground_truth.json`, sem alterar a classificação feita pelo receptor e sem transmitir o gabarito ao decodificador.
+
+Para gerar uma nova execução e avaliá-la a partir do diretório deste laboratório:
+
+```bash
+python run_scenarios.py --run-id s01-evaluation-001
+python evaluate_scenarios.py run-artifacts/s01-evaluation-001
+python -m unittest discover -s tests -v
+```
+
+Escolha outro identificador em execuções futuras. O avaliador não sobrescreve `evaluation.json` e `evaluation_summary.md` quando já existem. Ambos são gravados em `run-artifacts/<run_id>/` e permanecem ignorados pelo Git até revisão explícita.
+
+| Cenário | Recebidos previstos | Inválidos | Lacunas | Duplicados | Fora de ordem |
+|---|---:|---:|---:|---:|---:|
+| `baseline` | 5 | 0 | 0 | 0 | 0 |
+| `drop` | 4 | 0 | 1 | 0 | 0 |
+| `duplicate` | 6 | 0 | 0 | 1 | 0 |
+| `reorder` | 5 | 0 | 1 | 0 | 1 |
+| `corrupt` | 5 | 1 | 1 | 0 | 0 |
+
+**Vereditos:** `conformant` significa que os relatórios são consistentes e obedecem às expectativas; `deviation` indica eventos ou contadores divergentes da política; `inconsistent` identifica problemas nos registros, incluindo contagens contraditórias, identificadores, detalhes do gabarito ou hashes incompatíveis. A ferramenta retorna código 0 se todos os cenários forem conformes, 1 em caso de divergência/inconsistência e 2 para erro de leitura ou saída já existente.
+
+**Limitações:** o SHA-256 armazenado relaciona os relatórios, mas os bytes originais não são preservados para reverificação independente. Gerador e receptor têm fluxos de dados distintos, mas compartilham uma única simulação. Não há evidências de enlace RF ou hardware nem classificação cega da causa. A lacuna em `reorder` não implica perda real. Os cinco casos didáticos não permitem estimar sensibilidade, precisão, recall ou acurácia de um classificador.
+
+Foram executados localmente **14 novos testes automatizados (14/14)** com fixtures JSON representativas, incluindo os três vereditos e a prevenção de sobrescrita. A execução integrada dos programas com novos relatórios deve ser reproduzida no ambiente do leitor usando os comandos acima.
+
 ## Validação desta iteração
 
 Em ambiente de desenvolvimento com **Python 3.13.5**, foram executados **13 testes automatizados**, com resultado **OK (13/13)**. A execução local de `demo.py` produziu, na ordem, os estados `first`, `in_order`, `gap` (1 quadro estimado), `duplicate`, `out_of_order` e `in_order`, além da rejeição de um quadro corrompido com `CRC mismatch`.
@@ -144,7 +175,8 @@ Esses resultados demonstram comportamento do **software de simulação**, não d
 - [x] Separar gabarito do gerador e observações do receptor, vinculando-os por SHA-256.
 - [ ] Revisar e publicar evidências representativas dos ensaios, com proveniência e limitações.
 - [x] Registrar contagens descritivas e limitações para os cinco cenários sintéticos.
-- [ ] Avaliar indicadores comparativos de diagnóstico com critérios de referência previamente definidos.
+- [x] Publicar política explícita de expectativas e avaliação da conformidade para os cinco cenários de software.
+- [ ] Realizar estudo comparativo com múltiplas replicações e método independente adequado à detecção de causas.
 - [ ] Avaliar a integração futura com GSE, observabilidade e injeção controlada de falhas.
 
 O **S01 permanece em desenvolvimento**. A conclusão do laboratório exige resultados e evidências do protocolo experimental completo, não apenas a existência de código e testes unitários.
