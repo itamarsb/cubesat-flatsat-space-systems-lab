@@ -14,6 +14,8 @@ Esta primeira iteração é **exclusivamente uma simulação local em Python**. 
 |---|---|
 | `packet.py` | Codificador e decodificador de quadros, CRC-16 e observação de sequência por fonte |
 | `demo.py` | Demonstração determinística de recepção, lacuna, duplicação, reordenação e corrupção |
+| `run_experiment.py` | Execução do cenário de referência com relatório JSON individual |
+| `tests/test_experiment.py` | Testes do relatório, contadores, SHA-256 e proteção contra sobrescrita |
 | `tests/test_packet.py` | Testes automatizados offline com a biblioteca padrão `unittest` |
 
 ### Quadro experimental v1
@@ -63,9 +65,31 @@ No Windows, se o comando `python` não estiver disponível, use o Python Launche
 
 A demonstração imprime a origem sintética, valores de sequência, classificações e um quadro corrompido rejeitado por CRC. O fluxo (sequências `0, 1, 3, 3, 2, 4`) é fixo para permitir a reprodução do resultado. Nenhum arquivo ou serviço externo é alterado.
 
+### Registro estruturado de execuções (cenário de referência)
+
+O comando abaixo processa os mesmos quadros sintéticos do exemplo e salva um relatório JSON, com identificador único gerado automaticamente:
+
+```bash
+python run_experiment.py
+```
+
+Para atribuir um identificador próprio ou escolher um diretório de saída:
+
+```bash
+python run_experiment.py --run-id s01-verificacao-001 --output-dir run-artifacts
+```
+
+Por padrão, os relatórios são gravados em `run-artifacts/<run_id>.json`, pasta local ignorada pelo Git. Arquivos já existentes **não são sobrescritos**. Revise e remova informações sensíveis antes de publicar qualquer artefato de execução. A estrutura inclui `schema_version`, `run_id`, `lab_id`, `scenario_id`, `utc_start`, `utc_end`, `data_origin`, `git_commit` (quando disponível), `firmware_version`, ambiente Python, `params`, `measurements`, `events`, `checksums` e limitações.
+
+O hash SHA-256 é calculado sobre a concatenação ordenada de cada quadro precedido de seu comprimento em quatro bytes big-endian. Para a entrada sintética da primeira iteração, o hash esperado é `d665a7deb1c8820c4c4f6449c9199caddcc5100f1a68374604886741b33c7528`.
+
+**Valores observados no cenário local:** sete quadros processados, seis válidos, um rejeitado por CRC, uma lacuna de sequência (um quadro estimado), uma duplicação e um quadro fora de ordem. A sequência `2` aparece tardiamente: **não se conclui que houve perda efetiva de quadro**. A referência de execução é determinística, mas os horários e o identificador variam entre execuções. O relatório de eventos é uma observação do próprio decodificador, não uma fonte independente de verdade para ensaios comparativos.
+
 ## Validação desta iteração
 
 Em ambiente de desenvolvimento com **Python 3.13.5**, foram executados **13 testes automatizados**, com resultado **OK (13/13)**. A execução local de `demo.py` produziu, na ordem, os estados `first`, `in_order`, `gap` (1 quadro estimado), `duplicate`, `out_of_order` e `in_order`, além da rejeição de um quadro corrompido com `CRC mismatch`.
+
+Com o registro JSON, mais **6 testes automatizados** foram adicionados; a suíte conjunta foi executada em Python 3.13.5 e aprovou **19/19 testes**. A geração do relatório e a recusa de sobrescrita também foram verificadas localmente.
 
 Esses resultados demonstram comportamento do **software de simulação**, não desempenho de telemetria espacial ou de uma transmissão real. O teste deve ser repetido no ambiente de quem reproduzir o laboratório.
 
@@ -75,6 +99,7 @@ Esses resultados demonstram comportamento do **software de simulação**, não d
 - [x] Implementar codificação, decodificação e detecção de corrupção por CRC.
 - [x] Criar uma demonstração determinística de sequência e falhas.
 - [x] Adicionar testes offline para os comportamentos implementados.
+- [x] Registrar uma execução sintética de referência em JSON com contadores e SHA-256.
 - [ ] Formalizar cenários experimentais com parâmetros, `run_id`, logs persistidos e evidências de execução.
 - [ ] Medir resultados por cenário e documentar limitações observadas.
 - [ ] Avaliar a integração futura com GSE, observabilidade e injeção controlada de falhas.
