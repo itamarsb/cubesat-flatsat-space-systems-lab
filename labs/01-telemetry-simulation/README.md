@@ -1,6 +1,6 @@
 # S01 — Simulação e integridade da telemetria
 
-**Situação:** Em desenvolvimento — primeira iteração de software implementada e testada.
+**Situação:** Em desenvolvimento — implementação e cenários controlados de software testados.
 
 ## Objetivo
 
@@ -14,7 +14,10 @@ Esta primeira iteração é **exclusivamente uma simulação local em Python**. 
 |---|---|
 | `packet.py` | Codificador e decodificador de quadros, CRC-16 e observação de sequência por fonte |
 | `demo.py` | Demonstração determinística de recepção, lacuna, duplicação, reordenação e corrupção |
-| `run_experiment.py` | Execução do cenário de referência com relatório JSON individual |
+| `run_experiment.py` | Execução do cenário legado de referência com relatório JSON individual |
+| `scenarios.py` | Gerador de cinco cenários determinísticos e gabarito das intervenções |
+| `run_scenarios.py` | Execução de um ou cinco cenários, separando observações e gabarito em arquivos JSON |
+| `tests/test_scenarios.py` | Testes da separação dos registros, dos resultados e da prevenção de sobrescrita |
 | `tests/test_experiment.py` | Testes do relatório, contadores, SHA-256 e proteção contra sobrescrita |
 | `tests/test_packet.py` | Testes automatizados offline com a biblioteca padrão `unittest` |
 
@@ -85,11 +88,48 @@ O hash SHA-256 é calculado sobre a concatenação ordenada de cada quadro prece
 
 **Valores observados no cenário local:** sete quadros processados, seis válidos, um rejeitado por CRC, uma lacuna de sequência (um quadro estimado), uma duplicação e um quadro fora de ordem. A sequência `2` aparece tardiamente: **não se conclui que houve perda efetiva de quadro**. A referência de execução é determinística, mas os horários e o identificador variam entre execuções. O relatório de eventos é uma observação do próprio decodificador, não uma fonte independente de verdade para ensaios comparativos.
 
+### Matriz de cinco cenários controlados (software)
+
+Os ensaios seguintes utilizam a mesma fonte sintética e a sequência de referência `0, 1, 2, 3, 4`. Não representam medições sobre RF, FlatSat físico, GSE ou satélites reais.
+
+| Cenário | Intervenção conhecida pelo gerador | Observação do receptor |
+|---|---|---|
+| `baseline` | Nenhuma | Cinco quadros válidos, em ordem |
+| `drop` | Omitir quadro 2 antes de entregá-lo ao receptor | Uma lacuna, 1 quadro estimado ausente |
+| `duplicate` | Repetir quadro 2 | Um quadro duplicado |
+| `reorder` | Trocar as posições dos quadros 2 e 3 | Uma lacuna e um quadro fora de ordem, **sem perda real injetada** |
+| `corrupt` | Inverter um bit do quadro 2 sem recalcular o CRC | Um quadro inválido por CRC e uma lacuna posterior |
+
+Execute os cinco cenários:
+
+```bash
+python run_scenarios.py
+```
+
+Ou selecione apenas um cenário e um identificador próprio:
+
+```bash
+python run_scenarios.py --scenario reorder --run-id s01-reorder-001
+```
+
+A saída padrão é `run-artifacts/<run_id>/<scenario>/`, contendo:
+
+- `observations.json` — classificações e contadores produzidos exclusivamente por `decode_packet` e `SequenceTracker`, sem entrada do gabarito;
+- `ground_truth.json` — metadados da geração e a intervenção controlada conhecida **somente pelo gerador**.
+
+Os dois arquivos compartilham `run_id`, `scenario_id` e `checksums.input_frames_sha256`, para auditoria do mesmo conjunto ordenado de quadros. Os resultados são gravados em novos diretórios de execução; um `run_id` existente provoca erro, sem sobrescrever os arquivos anteriores. O diretório padrão `run-artifacts/` é ignorado pelo Git.
+
+**Interpretação científica:** a lacuna detectada em `reorder` não deve ser contabilizada como perda efetiva; já em `drop` a omissão é comprovada apenas pelo gabarito do gerador, não pela observação do receptor. A corrupção demonstra rejeição por CRC, mas não identifica, isoladamente, a causa física de uma alteração. O hash é uma verificação de integridade/reprodutibilidade, não uma comprovação de autenticidade.
+
+O registro de verdade é independente do diagnóstico quanto ao fluxo de dados, mas ambas as partes executam no mesmo processo de simulação e ainda não constituem validação externa ou referência experimental independente. A análise comparativa com métricas de acerto por classe fica para uma etapa posterior.
+
 ## Validação desta iteração
 
 Em ambiente de desenvolvimento com **Python 3.13.5**, foram executados **13 testes automatizados**, com resultado **OK (13/13)**. A execução local de `demo.py` produziu, na ordem, os estados `first`, `in_order`, `gap` (1 quadro estimado), `duplicate`, `out_of_order` e `in_order`, além da rejeição de um quadro corrompido com `CRC mismatch`.
 
 Com o registro JSON, mais **6 testes automatizados** foram adicionados; a suíte conjunta foi executada em Python 3.13.5 e aprovou **19/19 testes**. A geração do relatório e a recusa de sobrescrita também foram verificadas localmente.
+
+Nesta etapa, foram adicionados **12 testes** para os cenários independentes. A suíte completa foi executada localmente em Python 3.13.5: **31 testes aprovados (31/31)**. Também foi executado o comando `run_scenarios.py` com os cinco cenários e verificada a geração dos arquivos, a correspondência dos hashes e a recusa de sobrescrita.
 
 Esses resultados demonstram comportamento do **software de simulação**, não desempenho de telemetria espacial ou de uma transmissão real. O teste deve ser repetido no ambiente de quem reproduzir o laboratório.
 
@@ -100,8 +140,11 @@ Esses resultados demonstram comportamento do **software de simulação**, não d
 - [x] Criar uma demonstração determinística de sequência e falhas.
 - [x] Adicionar testes offline para os comportamentos implementados.
 - [x] Registrar uma execução sintética de referência em JSON com contadores e SHA-256.
-- [ ] Formalizar cenários experimentais com parâmetros, `run_id`, logs persistidos e evidências de execução.
-- [ ] Medir resultados por cenário e documentar limitações observadas.
+- [x] Formalizar cenários sintéticos independentes com parâmetros, `run_id` e relatórios JSON persistidos localmente.
+- [x] Separar gabarito do gerador e observações do receptor, vinculando-os por SHA-256.
+- [ ] Revisar e publicar evidências representativas dos ensaios, com proveniência e limitações.
+- [x] Registrar contagens descritivas e limitações para os cinco cenários sintéticos.
+- [ ] Avaliar indicadores comparativos de diagnóstico com critérios de referência previamente definidos.
 - [ ] Avaliar a integração futura com GSE, observabilidade e injeção controlada de falhas.
 
 O **S01 permanece em desenvolvimento**. A conclusão do laboratório exige resultados e evidências do protocolo experimental completo, não apenas a existência de código e testes unitários.
