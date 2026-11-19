@@ -10,7 +10,7 @@ The **CubeSat & FlatSat Space Systems Lab** is an engineering laboratory focused
 
 A **FlatSat** provides a bench-top arrangement of interconnected subsystems for testing functions commonly found in small satellites. This is a non-flight experimental platform, not a flight-qualified spacecraft or an operational orbital mission.
 
-**Current status:** laboratory planning and preparation. Experimental results will be documented after implementation and verification.
+**Current status:** laboratory development is underway. **S01** has an offline synthetic-telemetry implementation with validated software tests and GitHub Actions evidence. Physical FlatSat, radio-link, and other laboratory stages remain planned.
 
 ## Technical scope
 
@@ -28,7 +28,7 @@ A **FlatSat** provides a bench-top arrangement of interconnected subsystems for 
 | Lab | Topic | Status |
 |:---:|:---:|:---:|
 | [S00](labs/00-bench-baseline/README.md) | Bench requirements and inventory | Planned |
-| [S01](labs/01-telemetry-simulation/README.md) | Telemetry simulation and packet integrity | Planned |
+| [S01](labs/01-telemetry-simulation/README.md) | Telemetry simulation and packet integrity | In progress — software tested |
 | [S02](labs/02-embedded-flatsat/README.md) | Embedded FlatSat and sensors | Planned |
 | [S03](labs/03-ground-segment/README.md) | Ground Support Equipment | Planned |
 | [S04](labs/04-observability/README.md) | Observability pipeline | Planned |

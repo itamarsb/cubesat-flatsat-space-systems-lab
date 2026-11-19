@@ -56,7 +56,7 @@ Não versionamos automaticamente os arquivos de `run-artifacts/`.
 - **Artefato:** [s01-validation-44606673467](https://github.com/itamarsb/cubesat-flatsat-space-systems-lab/actions/runs/44606673467/artifacts/14570049126), ID `14570049126`; retenção prevista até **2026-12-03 20:14:57 UTC** (14 dias), sujeita à política do GitHub.
 - **Limite:** a aprovação verifica somente a conformidade dos cinco cenários sintéticos. Não constitui evidência de desempenho de RF, robustez do FlatSat físico ou capacidade de identificar causas reais de falhas.
 
-O primeiro job apresentou um aviso de depreciação do runtime Node.js 20 nas ações auxiliares de CI, **sem falha na execução**. O workflow foi posteriormente atualizado para versões das ações compatíveis com Node.js 24. Sua nova execução deve ser conferida separadamente.
+O primeiro job apresentou um aviso de depreciação do runtime Node.js 20 nas ações auxiliares de CI, **sem falha na execução**. O workflow foi atualizado para versões compatíveis com Node.js 24, e a [execução posterior #44607111397](https://github.com/itamarsb/cubesat-flatsat-space-systems-lab/actions/runs/44607111397) foi confirmada como bem-sucedida.
 
 ## Reprodutibilidade dos quadros e limites de proveniência
 

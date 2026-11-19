@@ -8,9 +8,9 @@
 
 O **CubeSat & FlatSat Space Systems Lab** é um laboratório de engenharia dedicado ao estudo e à implementação de subsistemas experimentais para pequenos satélites. Seu desenvolvimento integra hardware de bancada, firmware, aquisição de sensores, protocolos de telemetria, aplicações de segmento terrestre e práticas de observabilidade e confiabilidade.
 
-O projeto utiliza um **FlatSat** — montagem de subsistemas eletrônicos interligados em bancada — para reproduzir e investigar funções típicas de um pequeno satélite, sem alegar qualificação para voo ou equivalência com uma missão orbital. A evolução do laboratório parte da simulação e avança gradualmente para hardware físico e testes de comunicação.
+O projeto prevê a utilização de um **FlatSat** — montagem de subsistemas eletrônicos interligados em bancada — para investigar funções típicas de um pequeno satélite, sem alegar qualificação para voo ou equivalência com uma missão orbital. A evolução do laboratório parte da simulação e avança gradualmente para hardware físico e testes de comunicação.
 
-**Situação:** a trilha espacial está em preparação. As etapas indicadas como planejadas ainda não possuem resultados experimentais validados neste repositório.
+**Situação:** trilha espacial em desenvolvimento. O **S01** possui uma implementação de simulação local com testes e evidências verificadas no GitHub Actions; os laboratórios de hardware e demais etapas continuam planejados. Não há validação de FlatSat físico ou enlace de RF.
 
 ## Áreas de desenvolvimento
 
@@ -28,7 +28,7 @@ O projeto utiliza um **FlatSat** — montagem de subsistemas eletrônicos interl
 | Lab | Tema | Estado |
 |:---:|:---:|:---:|
 | [S00](labs/00-bench-baseline/README.md) | Requisitos, instrumentos e arquitetura da bancada | Planejado |
-| [S01](labs/01-telemetry-simulation/README.md) | Simulação e integridade de pacotes de telemetria | Planejado |
+| [S01](labs/01-telemetry-simulation/README.md) | Simulação e integridade de pacotes de telemetria | Em desenvolvimento — software testado |
 | [S02](labs/02-embedded-flatsat/README.md) | FlatSat com microcontrolador e aquisição de sensores | Planejado |
 | [S03](labs/03-ground-segment/README.md) | Ground Support Equipment (GSE) e recepção | Planejado |
 | [S04](labs/04-observability/README.md) | Métricas, logs, painéis e monitoramento | Planejado |
@@ -70,7 +70,7 @@ Para ensaios de diagnóstico, a causa de falhas introduzidas em bancada é regis
 
 O laboratório destina-se ao desenvolvimento e à pesquisa **em bancada**. Seus protótipos não são equipamentos certificados para operação espacial, aeronáutica ou de segurança crítica.
 
-A etapa inicial utiliza simulação e comunicação serial/USB. Ensaios com radiofrequência somente serão realizados após avaliação de atenuação, impedância, potência, isolamento, proteção dos receptores e requisitos regulatórios aplicáveis. A utilização de enlace conduzido não dispensa essa verificação.
+O S01 inicial utiliza apenas simulação local; a comunicação serial/USB pertence às etapas futuras de bancada. Ensaios com radiofrequência somente serão realizados após avaliação de atenuação, impedância, potência, isolamento, proteção dos receptores e requisitos regulatórios aplicáveis. A utilização de enlace conduzido não dispensa essa verificação.
 
 [Critérios de segurança e radiofrequência](docs/rf-safety.md)
 

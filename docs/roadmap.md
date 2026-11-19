@@ -1,13 +1,13 @@
 # Roadmap — CubeSat, FlatSat e sistemas espaciais de bancada
 
-**Estado geral:** planejamento dos laboratórios. A execução e os resultados serão acrescentados às páginas de cada laboratório.
+**Estado geral:** S01 em desenvolvimento, com simulação sintética implementada, testes e evidências de CI verificadas. Os demais laboratórios permanecem planejados, condicionais ou em estudo de viabilidade.
 
 ## Progressão
 
 | Lab | Tema | Entregável de referência | Status |
 |:---:|:---:|:---:|:---:|
 | S00 | Baseline de bancada | Diagrama, inventário, interfaces, riscos, critérios de aceite | Planejado |
-| S01 | Simulação de telemetria | Pacotes com versão e sequência, verificação de integridade, testes determinísticos | Planejado |
+| S01 | Simulação de telemetria | Pacotes com versão e sequência, verificação de integridade, testes determinísticos | Em desenvolvimento — software verificado |
 | S02 | FlatSat embarcado | Firmware STM32/ESP32, leituras de sensores, captura serial, comparação com referência | Planejado |
 | S03 | Ground Support Equipment | Receptor, validação de quadros, armazenamento e rastreabilidade | Planejado |
 | S04 | Observabilidade | Métricas, logs, painéis e validação de disponibilidade da cadeia | Planejado |
