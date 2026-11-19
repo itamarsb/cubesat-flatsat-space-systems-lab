@@ -1,0 +1,61 @@
+name: S01 - One-time reviewed evidence archive
+on:
+  push:
+    paths:
+      - '.github/workflows/s01-publish-snapshot-once.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  preserve-reference:
+    if: github.repository == 'itamarsb/cubesat-flatsat-space-systems-lab' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+      - name: Download specific previously validated CI artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          dest="labs/01-telemetry-simulation/evidence/reference-v1"
+          mkdir -p "$dest"
+          test ! -e "$dest/s01-reference-2026-11-19.zip"
+          curl -fLsS --retry 2 \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/itamarsb/cubesat-flatsat-space-systems-lab/actions/artifacts/14581060691/zip" \
+            --output "$dest/s01-reference-2026-11-19.zip"
+          python - <<'PY'
+          import hashlib, json, pathlib, zipfile
+          path = pathlib.Path('labs/01-telemetry-simulation/evidence/reference-v1/s01-reference-2026-11-19.zip')
+          expected = '11986c730e4e9102b930dbbdca42fa4a04c36515204fc08f0830e73cdf3be47c'
+          actual = hashlib.sha256(path.read_bytes()).hexdigest()
+          assert actual == expected, (actual, expected)
+          with zipfile.ZipFile(path) as z:
+              names = z.namelist()
+              assert len(names) == 19 and len(set(names)) == 19
+              assert all(not n.startswith('/') and '..' not in n.split('/') for n in names)
+              for name, expected_counts in [
+                  ('evaluation.json', {'scenarios': 5, 'conformant': 5, 'deviation': 0, 'inconsistent': 0}),
+                  ('evidence_verification.json', {'scenarios': 5, 'verified': 5, 'failed': 0}),
+                  ('replay_verification.json', {'scenarios': 5, 'matched': 5, 'mismatch': 0, 'unverifiable': 0}),
+              ]:
+                  assert json.loads(z.read(name))['counts'] == expected_counts
+              for name in ('baseline', 'corrupt', 'drop', 'duplicate', 'reorder'):
+                  a = json.loads(z.read(f'{name}/observations.json'))
+                  assert a['git_commit'] == 'ac233f6ad9d227ef22c1b144350c1659722c9767'
+                  assert a['run_id'] == 's01-ci-reference' and a['data_origin'] == 'synthetic'
+          print('Source ZIP SHA-256 verified:', actual)
+          PY
+      - name: Commit exact, reviewed ZIP bytes
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- 'labs/01-telemetry-simulation/evidence/reference-v1/s01-reference-2026-11-19.zip'
+          git commit -m 'evidence(s01): preserve validated synthetic CI reference ZIP'
+          git push origin HEAD:main
