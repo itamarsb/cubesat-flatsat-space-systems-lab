@@ -183,7 +183,7 @@ def evaluate_run(run_dir: Path, policy: dict) -> dict:
         "results": results,
         "limitations": [
             "Both files originate in one software simulator, not independent physical observations.",
-            "Stored hashes cross-reference the reports; original frame bytes are not archived for re-hashing.",
+            "If present, input_frames.json can be independently rehashed using verify_evidence.py; this evaluator only compares reported hashes.",
             "A receiver sequence gap is not proof of a lost physical transmission.",
             "These five deterministic cases cannot estimate precision, recall, sensitivity or accuracy.",
         ],
@@ -214,7 +214,7 @@ def markdown_summary(report: dict) -> str:
         "- **inconsistent:** metadados, contagens internas, ou hashes declarados não conferem.",
         "- No cenário `reorder`, há lacuna observada mas nenhum quadro foi omitido no gerador.",
         "- No cenário `drop`, a omissão é conhecida somente pelo gerador; o receptor registra uma lacuna.",
-        "- Os hashes informados são comparados entre relatórios, mas os bytes originais não são revalidados.",
+        "- Este avaliador compara hashes declarados; para recomputá-los a partir de bytes arquivados, execute verify_evidence.py.",
         "- Não estimar sensibilidade, precisão, recall ou taxa de acerto com estes casos didáticos.", "",
     ])
     return "\n".join(lines)

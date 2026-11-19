@@ -14,6 +14,7 @@ Execute a partir de `labs/01-telemetry-simulation`:
 ```bash
 python -m unittest discover -s tests -v
 python run_scenarios.py --run-id s01-local-verification
+python verify_evidence.py run-artifacts/s01-local-verification
 python evaluate_scenarios.py run-artifacts/s01-local-verification
 ```
 
@@ -24,7 +25,10 @@ não deixam artefatos no repositório.
 
 A avaliação gera `evaluation.json` e `evaluation_summary.md` em
 `run-artifacts/<run_id>/`, além dos pares `observations.json` e
-`ground_truth.json` de cada cenário. Revise todos os registros antes de
+`ground_truth.json` e do arquivo `input_frames.json` de cada cenário.
+O verificador cria `evidence_verification.json`, que contém o SHA-256
+recomputado a partir dos quadros em hexadecimal, antes da comparação com os hashes
+declarados nos dois relatórios. Revise todos os registros antes de
 publicar qualquer artefato. Essa pasta é ignorada pelo Git.
 
 ## Validação contínua e preservação
@@ -53,6 +57,23 @@ Não versionamos automaticamente os arquivos de `run-artifacts/`.
 
 O primeiro job apresentou um aviso de depreciação do runtime Node.js 20 nas ações auxiliares de CI, **sem falha na execução**. O workflow foi posteriormente atualizado para versões das ações compatíveis com Node.js 24. Sua nova execução deve ser conferida separadamente.
 
+## Reprodutibilidade dos quadros e limites de proveniência
+
+O arquivo `input_frames.json` preserva, para cada cenário, os bytes exatos
+apresentados ao receptor **depois** da intervenção (formato hexadecimal,
+ordem e índice do quadro). A auditoria independente implementada em
+`verify_evidence.py` utiliza somente bibliotecas padrão e não chama a
+função `sha256_frames` do gerador. Recalcula o hash pela convenção
+`SHA256(concat(uint32_be(length(frame)), frame))` para todos os quadros
+na ordem de recepção.
+
+Um quadro omitido antes de ser entregue ao receptor não estará no arquivo
+de entradas. Dados e hashes alterados em conjunto podem passar na auditoria:
+o processo não fornece autenticação, imutabilidade criptográfica da origem
+ou validação de telemetria espacial. O verificador também não reexecuta
+a classificação dos eventos do receptor, tarefa tratada pelos testes e
+pela avaliação separados.
+
 ## Critérios de aceite
 
 1. A suíte `unittest` passa sem falhas.
@@ -61,8 +82,12 @@ O primeiro job apresentou um aviso de depreciação do runtime Node.js 20 nas a�
 4. `evaluation.json` mostra 5 conformes, 0 divergentes e 0 inconsistentes.
 5. Tests automatizados demonstram os vereditos alternativos e recusa de
    sobrescrita sem alterar arquivos preexistentes.
-6. Os hashes dos relatórios correspondem entre si; **não equivalem à
-   revalidação independente dos bytes**, que não são arquivados.
+6. Para execuções atuais, o verificador reconstrói bytes de `input_frames.json`
+   e recalcula SHA-256, comparando com os dois relatórios de cada cenário.
+   A reverificação independente **não se aplica às execuções antigas**, que
+   não preservavam esses bytes.
+7. O arquivo de auditoria informa **5 cenários verificados, 0 falhas**.
+   O hash não é assinatura digital nem autentica a origem dos dados.
 
 A lacuna vista no cenário `reorder` não é uma perda comprovada.
 Os cinco cenários não constituem amostra estatística para estimar acurácia,

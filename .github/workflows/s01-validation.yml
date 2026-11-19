@@ -33,12 +33,15 @@ jobs:
       - name: Generate and assess five independent synthetic scenarios
         run: |
           python run_scenarios.py --run-id s01-ci-reference
+          python verify_evidence.py run-artifacts/s01-ci-reference
           python evaluate_scenarios.py run-artifacts/s01-ci-reference
           python - <<'PY'
           import json
           from pathlib import Path
           path = Path('run-artifacts/s01-ci-reference/evaluation.json')
           result = json.loads(path.read_text(encoding='utf-8'))
+          audit = json.loads(Path('run-artifacts/s01-ci-reference/evidence_verification.json').read_text(encoding='utf-8'))
+          assert audit['counts'] == {'scenarios': 5, 'verified': 5, 'failed': 0}, audit['counts']
           expected = {'scenarios': 5, 'conformant': 5, 'deviation': 0, 'inconsistent': 0}
           assert result['counts'] == expected, result['counts']
           print('S01 end-to-end: 5/5 conformant (software fixtures only)')

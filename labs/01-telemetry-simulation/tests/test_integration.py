@@ -44,8 +44,15 @@ class IntegratedWorkflowTests(unittest.TestCase):
     def evaluate(self) -> subprocess.CompletedProcess[str]:
         return self.command("evaluate_scenarios.py", str(self.run_dir))
 
+    def verify_bytes(self) -> subprocess.CompletedProcess[str]:
+        return self.command("verify_evidence.py", str(self.run_dir))
+
     def test_five_real_scenarios_conform_end_to_end(self) -> None:
         self.generate()
+        byte_audit = self.verify_bytes()
+        self.assertEqual(byte_audit.returncode, 0, byte_audit.stderr)
+        verification = json.loads((self.run_dir / "evidence_verification.json").read_text(encoding="utf-8"))
+        self.assertEqual(verification["counts"], {"scenarios": 5, "verified": 5, "failed": 0})
         result = self.evaluate()
         self.assertEqual(result.returncode, 0, result.stderr)
         evaluation = json.loads((self.run_dir / "evaluation.json").read_text(encoding="utf-8"))

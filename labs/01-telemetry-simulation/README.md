@@ -18,6 +18,9 @@ Esta primeira iteração é **exclusivamente uma simulação local em Python**. 
 | `scenarios.py` | Gerador de cinco cenários determinísticos e gabarito das intervenções |
 | `run_scenarios.py` | Execução de um ou cinco cenários, separando observações e gabarito em arquivos JSON |
 | `tests/test_scenarios.py` | Testes da separação dos registros, dos resultados e da prevenção de sobrescrita |
+| `frame_evidence.py` | Arquiva os bytes pós-intervenção entregues ao receptor em hexadecimal |
+| `verify_evidence.py` | Recalcula SHA-256 independentemente da geração, comparando-o aos relatórios |
+| `tests/test_frame_evidence.py` | Detecta alteração, reordenação, truncamento, metadados inconsistentes e sobrescrita |
 | `evaluation_policy.json` | Política versionada com contadores, estados e intervenções esperados para os cinco cenários |
 | `evaluate_scenarios.py` | Avaliador pós-execução: consistência, conformidade e tabela-resumo |
 | `tests/test_evaluate_scenarios.py` | Testes de conformidade, divergência, inconsistência e bloqueio de sobrescrita |
@@ -118,13 +121,41 @@ python run_scenarios.py --scenario reorder --run-id s01-reorder-001
 A saída padrão é `run-artifacts/<run_id>/<scenario>/`, contendo:
 
 - `observations.json` — classificações e contadores produzidos exclusivamente por `decode_packet` e `SequenceTracker`, sem entrada do gabarito;
-- `ground_truth.json` — metadados da geração e a intervenção controlada conhecida **somente pelo gerador**.
+- `ground_truth.json` — metadados da geração e a intervenção controlada conhecida **somente pelo gerador**;
+- `input_frames.json` — representação hexadecimal dos **quadros realmente apresentados ao receptor**, na ordem recebida e após a intervenção sintética.
 
 Os dois arquivos compartilham `run_id`, `scenario_id` e `checksums.input_frames_sha256`, para auditoria do mesmo conjunto ordenado de quadros. Os resultados são gravados em novos diretórios de execução; um `run_id` existente provoca erro, sem sobrescrever os arquivos anteriores. O diretório padrão `run-artifacts/` é ignorado pelo Git.
 
 **Interpretação científica:** a lacuna detectada em `reorder` não deve ser contabilizada como perda efetiva; já em `drop` a omissão é comprovada apenas pelo gabarito do gerador, não pela observação do receptor. A corrupção demonstra rejeição por CRC, mas não identifica, isoladamente, a causa física de uma alteração. O hash é uma verificação de integridade/reprodutibilidade, não uma comprovação de autenticidade.
 
 O registro de verdade é independente do diagnóstico quanto ao fluxo de dados, mas ambas as partes executam no mesmo processo de simulação e ainda não constituem validação externa ou referência experimental independente. A análise comparativa com métricas de acerto por classe fica para uma etapa posterior.
+
+### Reverificação dos quadros arquivados
+
+Após gerar uma nova execução com `run_scenarios.py`, verifique o SHA-256
+diretamente dos bytes preservados em `input_frames.json`:
+
+```bash
+python run_scenarios.py --run-id s01-byte-audit-001
+python verify_evidence.py run-artifacts/s01-byte-audit-001
+python evaluate_scenarios.py run-artifacts/s01-byte-audit-001
+```
+
+O verificador é implementado separadamente do gerador e não utiliza o codec,
+o monitor de sequência nem a função de hash da geração. Reconstrói quadros
+binários de 12 bytes a partir do hexadecimal, concatena `uint32_be(tamanho)`
+e os bytes de cada quadro na ordem original e calcula SHA-256. Compara o
+resultado com os hashes em `observations.json` e `ground_truth.json`,
+validando também número de quadros e identificadores.
+
+O resultado fica em `evidence_verification.json` e não sobrescreve versões
+anteriores. Os testes cobrem alteração de bit, troca de ordem, falta de
+quadro, hexadecimal inválido e alteração isolada de hashes.
+
+**Limite de proveniência:** os quadros arquivados representam os dados
+pós-intervenção recebidos pelo simulador. Quadros omitidos não aparecem
+nesse arquivo. Recomputar o hash confirma a consistência dos registros,
+não autentica sua origem nem impede adulteração conjunta de dados e hashes.
 
 ### Validação integrada e execução contínua
 
@@ -166,7 +197,7 @@ Escolha outro identificador em execuções futuras. O avaliador não sobrescreve
 
 **Vereditos:** `conformant` significa que os relatórios são consistentes e obedecem às expectativas; `deviation` indica eventos ou contadores divergentes da política; `inconsistent` identifica problemas nos registros, incluindo contagens contraditórias, identificadores, detalhes do gabarito ou hashes incompatíveis. A ferramenta retorna código 0 se todos os cenários forem conformes, 1 em caso de divergência/inconsistência e 2 para erro de leitura ou saída já existente.
 
-**Limitações:** o SHA-256 armazenado relaciona os relatórios, mas os bytes originais não são preservados para reverificação independente. Gerador e receptor têm fluxos de dados distintos, mas compartilham uma única simulação. Não há evidências de enlace RF ou hardware nem classificação cega da causa. A lacuna em `reorder` não implica perda real. Os cinco casos didáticos não permitem estimar sensibilidade, precisão, recall ou acurácia de um classificador.
+**Limitações:** a auditoria externa dos bytes é possível apenas em novas execuções que preservam `input_frames.json`; execuções anteriores não continham esse arquivo. Gerador e receptor têm fluxos de dados distintos, mas compartilham uma única simulação. Não há evidências de enlace RF ou hardware nem classificação cega da causa. A lacuna em `reorder` não implica perda real. Os cinco casos didáticos não permitem estimar sensibilidade, precisão, recall ou acurácia de um classificador.
 
 Foram executados localmente **14 novos testes automatizados (14/14)** com fixtures JSON representativas, incluindo os três vereditos e a prevenção de sobrescrita. A execução integrada dos programas com novos relatórios deve ser reproduzida no ambiente do leitor usando os comandos acima.
 
@@ -191,7 +222,9 @@ Esses resultados demonstram comportamento do **software de simulação**, não d
 - [x] Separar gabarito do gerador e observações do receptor, vinculando-os por SHA-256.
 - [ ] Revisar e publicar evidências representativas dos ensaios, com proveniência e limitações.
 - [x] Implementar teste de integração de geração → observação → avaliação e fluxo CI reexecutável.
-- [ ] Verificar e registrar o resultado efetivo do workflow GitHub Actions.
+- [x] Verificar a execução de CI com 49 testes e cinco cenários conformes (19/11/2026).
+- [x] Acrescentar preservação de quadros pós-intervenção e auditoria SHA-256 dos bytes em novas execuções.
+- [ ] Confirmar e registrar execução de CI da auditoria SHA-256.
 - [x] Registrar contagens descritivas e limitações para os cinco cenários sintéticos.
 - [x] Publicar política explícita de expectativas e avaliação da conformidade para os cinco cenários de software.
 - [ ] Realizar estudo comparativo com múltiplas replicações e método independente adequado à detecção de causas.

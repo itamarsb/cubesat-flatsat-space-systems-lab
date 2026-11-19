@@ -5,6 +5,8 @@ from pathlib import Path
 import json
 from uuid import uuid4
 
+from frame_evidence import make_frame_archive
+
 from run_experiment import (
     RUN_ID_PATTERN,
     build_report,
@@ -22,12 +24,11 @@ from scenarios import (
 )
 
 
-def evaluate_scenario(
-    scenario_id: str, *, run_id: str, utc_start: str, utc_end: str,
-    git_commit: str | None,
+def _evaluate_generated(
+    frames: list[bytes], truth: dict, *, scenario_id: str, run_id: str,
+    utc_start: str, utc_end: str, git_commit: str | None,
 ) -> tuple[dict, dict]:
     """Keep generator truth out of the decoder's inputs and observation report."""
-    frames, truth = generate_scenario(scenario_id)
     observations = build_report(
         frames, run_id=run_id, utc_start=utc_start,
         utc_end=utc_end, git_commit=git_commit,
@@ -45,6 +46,18 @@ def evaluate_scenario(
     truth["run_id"] = run_id
     truth["checksums"] = {"input_frames_sha256": sha256_frames(frames)}
     return observations, truth
+
+
+def evaluate_scenario(
+    scenario_id: str, *, run_id: str, utc_start: str, utc_end: str,
+    git_commit: str | None,
+) -> tuple[dict, dict]:
+    """Compatibility wrapper for the existing unit tests and callers."""
+    frames, truth = generate_scenario(scenario_id)
+    return _evaluate_generated(
+        frames, truth, scenario_id=scenario_id, run_id=run_id,
+        utc_start=utc_start, utc_end=utc_end, git_commit=git_commit,
+    )
 
 
 def _save_json(path: Path, data: dict) -> None:
@@ -70,15 +83,20 @@ def save_run(
     run_dir.mkdir(exist_ok=False)
     for scenario in scenario_ids:
         start = utc_timestamp()
-        observations, truth = evaluate_scenario(
-            scenario, run_id=run_id, utc_start=start,
-            utc_end=start, git_commit=git_commit,
+        frames, truth = generate_scenario(scenario)
+        observations, truth = _evaluate_generated(
+            frames, truth, scenario_id=scenario, run_id=run_id,
+            utc_start=start, utc_end=start, git_commit=git_commit,
         )
         observations["utc_end"] = utc_timestamp()
         scenario_dir = run_dir / scenario
         scenario_dir.mkdir()
         _save_json(scenario_dir / "observations.json", observations)
         _save_json(scenario_dir / "ground_truth.json", truth)
+        _save_json(
+            scenario_dir / "input_frames.json",
+            make_frame_archive(frames, run_id=run_id, scenario_id=scenario),
+        )
     return run_dir
 
 
