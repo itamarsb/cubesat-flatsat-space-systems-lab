@@ -19,6 +19,8 @@ Esta primeira iteração é **exclusivamente uma simulação local em Python**. 
 | `run_scenarios.py` | Execução de um ou cinco cenários, separando observações e gabarito em arquivos JSON |
 | `tests/test_scenarios.py` | Testes da separação dos registros, dos resultados e da prevenção de sobrescrita |
 | `frame_evidence.py` | Arquiva os bytes pós-intervenção entregues ao receptor em hexadecimal |
+| `replay_observations.py` | Reproduz eventos e contadores diretamente dos quadros arquivados |
+| `tests/test_replay_observations.py` | Testes de replay e de alterações coordenadas de quadros e hashes |
 | `verify_evidence.py` | Recalcula SHA-256 independentemente da geração, comparando-o aos relatórios |
 | `tests/test_frame_evidence.py` | Detecta alteração, reordenação, truncamento, metadados inconsistentes e sobrescrita |
 | `evaluation_policy.json` | Política versionada com contadores, estados e intervenções esperados para os cinco cenários |
@@ -138,6 +140,7 @@ diretamente dos bytes preservados em `input_frames.json`:
 ```bash
 python run_scenarios.py --run-id s01-byte-audit-001
 python verify_evidence.py run-artifacts/s01-byte-audit-001
+python replay_observations.py run-artifacts/s01-byte-audit-001
 python evaluate_scenarios.py run-artifacts/s01-byte-audit-001
 ```
 
@@ -156,6 +159,31 @@ quadro, hexadecimal inválido e alteração isolada de hashes.
 pós-intervenção recebidos pelo simulador. Quadros omitidos não aparecem
 nesse arquivo. Recomputar o hash confirma a consistência dos registros,
 não autentica sua origem nem impede adulteração conjunta de dados e hashes.
+
+### Reprodução dos eventos a partir dos quadros armazenados
+
+O comando abaixo executa uma **nova passagem pelo mesmo decoder** e pelo
+`SequenceTracker` sobre os bytes preservados em `input_frames.json`,
+sem consultar o gabarito das intervenções e sem reutilizar a função
+`build_report()` que produziu as observações iniciais.
+
+```bash
+python replay_observations.py run-artifacts/s01-byte-audit-001
+```
+
+O resultado é salvo em `replay_verification.json`. O script compara
+**cada evento** (status, índice, origem, número de sequência e estimativa
+de lacuna ou razão de rejeição) e os **contadores recalculados** com
+`observations.json`. Inconsistências de hash, identificação ou formato
+bloqueiam o replay e geram status `unverifiable`; divergências nos
+eventos/contadores resultam em `mismatch`. Quadros reproduzidos com os
+mesmos resultados recebem `matched`. Arquivos anteriores não são
+sobrescritos.
+
+O replay fornece uma checagem adicional de **reprodutibilidade**: usa
+o mesmo algoritmo do receptor e não constitui um decodificador de referência
+independente, nem certificação espacial. A observação de lacuna não
+comprova perda física. Consulte [VALIDATION.md](VALIDATION.md).
 
 ### Validação integrada e execução contínua
 
@@ -227,6 +255,8 @@ Esses resultados demonstram comportamento do **software de simulação**, não d
 - [x] Confirmar e registrar execução de CI da auditoria SHA-256 (19/11/2026, 61 testes aprovados e 5/5 hashes verificados).
 - [x] Registrar contagens descritivas e limitações para os cinco cenários sintéticos.
 - [x] Publicar política explícita de expectativas e avaliação da conformidade para os cinco cenários de software.
+- [x] Implementar replay dos quadros arquivados e comparar eventos e contadores do receptor.
+- [ ] Confirmar o replay em uma execução aprovada de CI e registrar a evidência.
 - [ ] Realizar estudo comparativo com múltiplas replicações e método independente adequado à detecção de causas.
 - [ ] Avaliar a integração futura com GSE, observabilidade e injeção controlada de falhas.
 

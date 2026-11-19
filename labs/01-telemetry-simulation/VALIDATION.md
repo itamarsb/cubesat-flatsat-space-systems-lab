@@ -15,6 +15,7 @@ Execute a partir de `labs/01-telemetry-simulation`:
 python -m unittest discover -s tests -v
 python run_scenarios.py --run-id s01-local-verification
 python verify_evidence.py run-artifacts/s01-local-verification
+python replay_observations.py run-artifacts/s01-local-verification
 python evaluate_scenarios.py run-artifacts/s01-local-verification
 ```
 
@@ -106,6 +107,31 @@ Esses valores são provas de **consistência entre os arquivos** de uma simulaç
 determinística e não assinaturas digitais. Eles não certificam dados de sensores,
 operação de um enlace espacial, nem inviabilizam adulteração coordenada dos arquivos.
 
+## Replay do receptor a partir dos quadros preservados
+
+O script `replay_observations.py` lê novamente os bytes em
+`input_frames.json` e reproduz a decodificação, a verificação CRC e o
+acompanhamento da sequência. Compara cada evento e todos os contadores
+do replay com `observations.json`. Antes do replay, requer a integridade
+dos hashes e dos metadados verificados por `audit_scenario`.
+
+O registro `replay_verification.json` diferencia três situações:
+
+- `matched`: os bytes arquivados reproduziram eventos e contadores;
+- `mismatch`: os arquivos estão íntegros, mas as observações divergem;
+- `unverifiable`: hash, índices ou metadados de entrada não podem ser validados.
+
+Os testes de regressão simulam alterações em eventos, contadores e
+quadros; também alteram bytes e hashes simultaneamente para mostrar
+que **conferir apenas hashes declarados não valida a coerência dos
+eventos com o fluxo de entrada**.
+
+O replay não utiliza informações de falha do gerador, mas reutiliza o
+mesmo decodificador e a mesma classe de sequência da implementação
+original. Assim, demonstra reprodutibilidade do software, **não é uma
+implementação independente para certificar a exatidão do algoritmo**.
+Não há medição física de taxa de perda ou confiabilidade espacial.
+
 ## Critérios de aceite
 
 1. A suíte `unittest` passa sem falhas.
@@ -120,6 +146,7 @@ operação de um enlace espacial, nem inviabilizam adulteração coordenada dos 
    não preservavam esses bytes.
 7. O arquivo de auditoria informa **5 cenários verificados, 0 falhas**.
    O hash não é assinatura digital nem autentica a origem dos dados.
+8. O replay confirma **5 cenários correspondentes, 0 divergências e 0 não verificáveis**.
 
 A lacuna vista no cenário `reorder` não é uma perda comprovada.
 Os cinco cenários não constituem amostra estatística para estimar acurácia,

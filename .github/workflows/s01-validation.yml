@@ -34,6 +34,7 @@ jobs:
         run: |
           python run_scenarios.py --run-id s01-ci-reference
           python verify_evidence.py run-artifacts/s01-ci-reference
+          python replay_observations.py run-artifacts/s01-ci-reference
           python evaluate_scenarios.py run-artifacts/s01-ci-reference
           python - <<'PY'
           import json
@@ -42,6 +43,8 @@ jobs:
           result = json.loads(path.read_text(encoding='utf-8'))
           audit = json.loads(Path('run-artifacts/s01-ci-reference/evidence_verification.json').read_text(encoding='utf-8'))
           assert audit['counts'] == {'scenarios': 5, 'verified': 5, 'failed': 0}, audit['counts']
+          replay = json.loads(Path('run-artifacts/s01-ci-reference/replay_verification.json').read_text(encoding='utf-8'))
+          assert replay['counts'] == {'scenarios': 5, 'matched': 5, 'mismatch': 0, 'unverifiable': 0}, replay['counts']
           expected = {'scenarios': 5, 'conformant': 5, 'deviation': 0, 'inconsistent': 0}
           assert result['counts'] == expected, result['counts']
           print('S01 end-to-end: 5/5 conformant (software fixtures only)')
