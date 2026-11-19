@@ -41,6 +41,18 @@ exato, o nome do artefato, as versões do ambiente e os hashes dos dados.
 Não descreva como verificação concluída uma execução ainda não observada.
 Não versionamos automaticamente os arquivos de `run-artifacts/`.
 
+## Evidência efetivamente observada — 19/11/2026
+
+- **Execução GitHub Actions:** [S01 Offline Telemetry Validation #44606673467](https://github.com/itamarsb/cubesat-flatsat-space-systems-lab/actions/runs/44606673467)
+- **Código testado:** commit `d4fdb35ec9dbd396c05b36ec491cdf53ccb7b54c` (`main`).
+- **Ambiente do job:** Ubuntu hospedado pelo GitHub, Python 3.13.
+- **Teste automatizado:** **49 testes executados, todos com resultado OK**, segundo os logs do job.
+- **Integração de ponta a ponta:** `run_scenarios.py` seguido de `evaluate_scenarios.py`; **5 cenários conformes, 0 divergentes e 0 inconsistentes**, conforme as verificações do job.
+- **Artefato:** [s01-validation-44606673467](https://github.com/itamarsb/cubesat-flatsat-space-systems-lab/actions/runs/44606673467/artifacts/14570049126), ID `14570049126`; retenção prevista até **2026-12-03 20:14:57 UTC** (14 dias), sujeita à política do GitHub.
+- **Limite:** a aprovação verifica somente a conformidade dos cinco cenários sintéticos. Não constitui evidência de desempenho de RF, robustez do FlatSat físico ou capacidade de identificar causas reais de falhas.
+
+O primeiro job apresentou um aviso de depreciação do runtime Node.js 20 nas ações auxiliares de CI, **sem falha na execução**. O workflow foi posteriormente atualizado para versões das ações compatíveis com Node.js 24. Sua nova execução deve ser conferida separadamente.
+
 ## Critérios de aceite
 
 1. A suíte `unittest` passa sem falhas.
