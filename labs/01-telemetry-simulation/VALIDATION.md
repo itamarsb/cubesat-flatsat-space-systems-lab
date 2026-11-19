@@ -74,6 +74,38 @@ ou validação de telemetria espacial. O verificador também não reexecuta
 a classificação dos eventos do receptor, tarefa tratada pelos testes e
 pela avaliação separados.
 
+## Evidência auditada — quadros originais da simulação (19/11/2026)
+
+- **Workflow efetivamente concluído:** [execução #44625657432](https://github.com/itamarsb/cubesat-flatsat-space-systems-lab/actions/runs/44625657432), `success`.
+- **Commit executado:** `d76c30eb53ffa3a099fba2bb583729f8d588582a` (branch `main`).
+- **Resultados da suíte:** 61 testes `unittest`, todos aprovados.
+- **Avaliação funcional:** cinco cenários conformes, zero divergentes, zero inconsistentes.
+- **Auditoria dos bytes:** cinco arquivos de quadros reconstruídos e verificados, sem erros.
+- **Artefato:** [s01-validation-44625657432](https://github.com/itamarsb/cubesat-flatsat-space-systems-lab/actions/runs/44625657432/artifacts/14577398750), ID `14577398750`; expiração informada pelo GitHub: **03/12/2026, 22:08:22 UTC**.
+
+### Hashes SHA-256 recalculados do artefato baixado
+
+| Cenário | Quadros de entrada do receptor | SHA-256 recalculado |
+|---|---:|---|
+| `baseline` | 5 | `1afde3c85f9c33fc572abfb530729253779ec42083292d9a2db75b59f1123de2` |
+| `drop` | 4 | `343300aff7356dc1b7b6457b67be641944b6145313fb1644735b747bdad80908` |
+| `duplicate` | 6 | `d0f17bf6f95c5da85b3b580b5727a631cb1add5448b1cc2d66e50ac122bc5ca6` |
+| `reorder` | 5 | `079c3ab16814988d5d9a861d5a3659c7df095ad0fcde816186d4d6ac16be18d9` |
+| `corrupt` | 5 | `f79aafc0f5dd0d770240137ce92245606830217c0b609faedf6ff1aaf740fd8a` |
+
+A verificação independente foi repetida a partir do arquivo ZIP baixado da execução acima,
+usando a reconstrução de `bytes_hex` e `hashlib.sha256`. Cada resultado coincidiu com
+o digest registrado em `observations.json` e `ground_truth.json`.
+
+**SHA-256 da cópia ZIP baixada:** `5779bb7b54bae7278362f2b796dee3b4a6c8ace3448755fd99e7ce0cef680383`.
+Esse hash identifica a cópia ZIP examinada; o artefato remoto poderá deixar de estar
+disponível após o período de retenção. Os cinco hashes da tabela permanecem como
+referências verificáveis para reproduções futuras do experimento.
+
+Esses valores são provas de **consistência entre os arquivos** de uma simulação
+determinística e não assinaturas digitais. Eles não certificam dados de sensores,
+operação de um enlace espacial, nem inviabilizam adulteração coordenada dos arquivos.
+
 ## Critérios de aceite
 
 1. A suíte `unittest` passa sem falhas.

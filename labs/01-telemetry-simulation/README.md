@@ -224,7 +224,7 @@ Esses resultados demonstram comportamento do **software de simulação**, não d
 - [x] Implementar teste de integração de geração → observação → avaliação e fluxo CI reexecutável.
 - [x] Verificar a execução de CI com 49 testes e cinco cenários conformes (19/11/2026).
 - [x] Acrescentar preservação de quadros pós-intervenção e auditoria SHA-256 dos bytes em novas execuções.
-- [ ] Confirmar e registrar execução de CI da auditoria SHA-256.
+- [x] Confirmar e registrar execução de CI da auditoria SHA-256 (19/11/2026, 61 testes aprovados e 5/5 hashes verificados).
 - [x] Registrar contagens descritivas e limitações para os cinco cenários sintéticos.
 - [x] Publicar política explícita de expectativas e avaliação da conformidade para os cinco cenários de software.
 - [ ] Realizar estudo comparativo com múltiplas replicações e método independente adequado à detecção de causas.
