@@ -171,6 +171,20 @@ A verificação do snapshot na CI atual deve ser vinculada a uma execução
 efetivamente aprovada; o commit de origem continuará identificado
 separadamente dos commits posteriores que preservaram esses resultados.
 
+### Verificação automatizada do snapshot publicado — 19/11/2026
+
+- **Commit verificado:** `b7607b0b65769c8184b177196d9daf4e0fe65eb5`.
+- **Execução GitHub Actions:** [#44638754042](https://github.com/itamarsb/cubesat-flatsat-space-systems-lab/actions/runs/44638754042), conclusão `success`.
+- **Manifesto e ZIP:** verificador confirmou o SHA-256 do ZIP de 12.375 bytes, a relação dos 19 arquivos e seus hashes, os conjuntos de quadros e os contadores dos relatórios.
+- **Testes regressivos:** **76/76 aprovados** em Python 3.13, incluindo seis verificações novas do snapshot.
+- **Cadeia de software:** cinco auditorias de quadros, cinco replays correspondentes e cinco cenários sintéticos conformes.
+- **Retenção do original publicado:** o ZIP versionado em Git não depende mais da expiração do artefato do Actions, embora sua disponibilidade continue sujeita à manutenção do repositório.
+
+O snapshot pertence à execução do commit `ac233f6a`. A validação
+posterior de `b7607b0` **não** transforma seus registros históricos em
+resultados produzidos pelo novo commit; apenas verifica a integridade da cópia
+congelada e executa novamente a cadeia de software.
+
 ## Critérios de aceite
 
 1. A suíte `unittest` passa sem falhas.

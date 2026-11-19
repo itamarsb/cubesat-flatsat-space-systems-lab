@@ -32,7 +32,7 @@ Na pasta `labs/01-telemetry-simulation`, execute:
 python verify_reference_snapshot.py
 ```
 
-O verificador usa exclusivamente a biblioteca padrão. Confere o hash
+**Verificação CI aprovada:** [GitHub Actions #44638754042](https://github.com/itamarsb/cubesat-flatsat-space-systems-lab/actions/runs/44638754042), com **76 testes aprovados** para a versão que inclui o manifesto. O verificador usa exclusivamente a biblioteca padrão. Confere o hash
 do ZIP, o manifesto, o tamanho e SHA-256 de cada arquivo interno e o SHA-256
 dos quadros reconstruídos do hexadecimal, com 4 bytes big-endian de tamanho
 prefixando cada quadro. Também verifica identificadores e contadores dos
