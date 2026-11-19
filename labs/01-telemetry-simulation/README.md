@@ -256,7 +256,7 @@ Esses resultados demonstram comportamento do **software de simulação**, não d
 - [x] Registrar contagens descritivas e limitações para os cinco cenários sintéticos.
 - [x] Publicar política explícita de expectativas e avaliação da conformidade para os cinco cenários de software.
 - [x] Implementar replay dos quadros arquivados e comparar eventos e contadores do receptor.
-- [ ] Confirmar o replay em uma execução aprovada de CI e registrar a evidência.
+- [x] Confirmar o replay em execução aprovada do GitHub Actions (19/11/2026: 70 testes e 5/5 replays correspondentes).
 - [ ] Realizar estudo comparativo com múltiplas replicações e método independente adequado à detecção de causas.
 - [ ] Avaliar a integração futura com GSE, observabilidade e injeção controlada de falhas.
 

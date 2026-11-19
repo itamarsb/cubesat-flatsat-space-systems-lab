@@ -132,6 +132,22 @@ original. Assim, demonstra reprodutibilidade do software, **não é uma
 implementação independente para certificar a exatidão do algoritmo**.
 Não há medição física de taxa de perda ou confiabilidade espacial.
 
+## Replay efetivamente validado no GitHub Actions — 19/11/2026
+
+- **Execução:** [GitHub Actions #44628209124](https://github.com/itamarsb/cubesat-flatsat-space-systems-lab/actions/runs/44628209124), conclusão `success`.
+- **Código testado:** commit `ac233f6ad9d227ef22c1b144350c1659722c9767`.
+- **Suíte Python 3.13:** 70 testes executados, todos aprovados (`Ran 70 tests ... OK` nos logs).
+- **Auditoria dos quadros:** `Verified scenarios: 5/5`.
+- **Reprodução de eventos e contadores:** `Matched: 5/5`.
+- **Avaliação da política:** cinco cenários conformes, zero divergentes e zero registros inconsistentes.
+- **Pacote temporário:** [artefato s01-validation-44628209124](https://github.com/itamarsb/cubesat-flatsat-space-systems-lab/actions/runs/44628209124/artifacts/14581060691), ID `14581060691`, disponibilizado pelo GitHub com expiração prevista em **03/12/2026 22:23:51 UTC**.
+
+O replay agora reconstitui os eventos diretamente dos bytes preservados e os
+compara aos registros produzidos durante a execução original. Sua concordância
+**não comprova a correção do decodificador**: as duas passagens usam o mesmo
+`packet.py` e `SequenceTracker`. Ensaios com hardware real, fontes externas
+e avaliação de diagnóstico independente permanecem fora deste resultado.
+
 ## Critérios de aceite
 
 1. A suíte `unittest` passa sem falhas.
