@@ -126,6 +126,22 @@ Os dois arquivos compartilham `run_id`, `scenario_id` e `checksums.input_frames_
 
 O registro de verdade é independente do diagnóstico quanto ao fluxo de dados, mas ambas as partes executam no mesmo processo de simulação e ainda não constituem validação externa ou referência experimental independente. A análise comparativa com métricas de acerto por classe fica para uma etapa posterior.
 
+### Validação integrada e execução contínua
+
+O teste `tests/test_integration.py` executa os próprios comandos de geração e avaliação
+em diretórios temporários. Valida os cinco cenários reais, verifica hashes cruzados,
+proteção contra sobrescrita e a diferenciação entre divergência e inconsistência.
+Foi corrigido o caminho da política nos testes do avaliador para apontar ao diretório
+raiz deste laboratório.
+
+O workflow de CI do GitHub Actions (`.github/workflows/s01-validation.yml`) executa a
+suíte e uma geração/avaliação integrada usando Python 3.13. A configuração prevê
+preservação temporária de artefatos por 14 dias; a execução e seu status devem ser
+verificados na página Actions antes de tratar o resultado como evidência confirmada.
+
+Veja [Validação integrada reproduzível](VALIDATION.md) para os critérios de aceite,
+comandos, proveniência dos resultados e limites da demonstração.
+
 ### Avaliação pós-execução e critérios definidos
 
 A política versionada `evaluation_policy.json` registra os resultados esperados para os cinco cenários determinísticos, inclusive contadores, sequência de estados, razão de rejeição de quadro inválido e os detalhes da intervenção conhecida pelo gerador. O avaliador lê separadamente `observations.json` e `ground_truth.json`, sem alterar a classificação feita pelo receptor e sem transmitir o gabarito ao decodificador.
@@ -174,6 +190,8 @@ Esses resultados demonstram comportamento do **software de simulação**, não d
 - [x] Formalizar cenários sintéticos independentes com parâmetros, `run_id` e relatórios JSON persistidos localmente.
 - [x] Separar gabarito do gerador e observações do receptor, vinculando-os por SHA-256.
 - [ ] Revisar e publicar evidências representativas dos ensaios, com proveniência e limitações.
+- [x] Implementar teste de integração de geração → observação → avaliação e fluxo CI reexecutável.
+- [ ] Verificar e registrar o resultado efetivo do workflow GitHub Actions.
 - [x] Registrar contagens descritivas e limitações para os cinco cenários sintéticos.
 - [x] Publicar política explícita de expectativas e avaliação da conformidade para os cinco cenários de software.
 - [ ] Realizar estudo comparativo com múltiplas replicações e método independente adequado à detecção de causas.

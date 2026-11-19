@@ -11,7 +11,7 @@ import unittest
 from evaluate_scenarios import InvalidRun, evaluate_pair, evaluate_run, markdown_summary, read_json
 
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parent.parent
 POLICY = read_json(ROOT / "evaluation_policy.json")
 SEQUENCE_MAP = {
     "baseline": [0, 1, 2, 3, 4],

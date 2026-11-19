@@ -1,0 +1,53 @@
+name: S01 - Offline Telemetry Validation
+
+on:
+  push:
+    paths:
+      - 'labs/01-telemetry-simulation/**'
+      - '.github/workflows/s01-validation.yml'
+  pull_request:
+    paths:
+      - 'labs/01-telemetry-simulation/**'
+      - '.github/workflows/s01-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-s01:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: labs/01-telemetry-simulation
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Run offline regression and integration tests
+        run: python -m unittest discover -s tests -v
+      - name: Generate and assess five independent synthetic scenarios
+        run: |
+          python run_scenarios.py --run-id s01-ci-reference
+          python evaluate_scenarios.py run-artifacts/s01-ci-reference
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path('run-artifacts/s01-ci-reference/evaluation.json')
+          result = json.loads(path.read_text(encoding='utf-8'))
+          expected = {'scenarios': 5, 'conformant': 5, 'deviation': 0, 'inconsistent': 0}
+          assert result['counts'] == expected, result['counts']
+          print('S01 end-to-end: 5/5 conformant (software fixtures only)')
+          PY
+      - name: Preserve traceable CI evidence (temporary artifact)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s01-validation-${{ github.run_id }}
+          path: labs/01-telemetry-simulation/run-artifacts/s01-ci-reference/
+          if-no-files-found: ignore
+          retention-days: 14
