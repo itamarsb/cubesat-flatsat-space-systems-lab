@@ -30,7 +30,7 @@ A cadeia sintética `geração → registro dos bytes → validação CRC e sequ
 | Integridade de quadros e CRC | **Atendido** | Auditoria dos bytes e rejeição da corrupção prevista |
 | Replay dos eventos e contadores | **Atendido com limite** | Cinco replays correspondentes; utiliza o mesmo decoder e `SequenceTracker` |
 | Testes automatizados e integração contínua | **Atendido** | 70 testes e cinco cenários conformes no CI, com execução confirmada |
-| Evidência permanentemente acessível | **Pendente** | ZIP da execução tem retenção limitada; documento com hashes não substitui os arquivos originais |
+| Evidência preservada no histórico Git | **Atendido após esta auditoria** | ZIP original da execução, manifesto SHA-256 e verificador em `evidence/reference-v1/`; disponibilidade depende do repositório |
 | Hipótese experimental e critérios finais de aceite próprios do S01 | **Parcial** | Há objetivos, políticas esperadas e testes, mas falta um quadro de encerramento restrito ao S01 |
 | Status coerentes nos documentos do repositório | **Correção nesta auditoria** | READMEs PT/EN e roadmap ainda classificavam S01 como planejado |
 | Ensaios estatísticos e diagnóstico independente de causas | **Fora do aceite do S01 inicial** | Pertencem à evolução da metodologia e/ou ao S05; não devem ser reivindicados nesta versão |
@@ -38,7 +38,7 @@ A cadeia sintética `geração → registro dos bytes → validação CRC e sequ
 
 ## Pendências priorizadas
 
-**P1 — Preservação durável de evidência representativa.** Selecionar, revisar e publicar uma amostra pequena e íntegra de resultados sintéticos (arquivos de entrada, observações, gabaritos, avaliação, auditoria e replay), vinculada ao commit. O artefato completo do CI permanece disponível temporariamente; **não** publicá-lo automaticamente sem revisão de conteúdo e proveniência.
+**P1 — Preservação durável de evidência representativa (resolvida após a auditoria).** O ZIP original de 19 arquivos foi revisado e incorporado ao histórico Git com manifesto de SHA-256 e verificador reproduzível em `evidence/reference-v1/`. A disponibilidade depende da manutenção do repositório.
 
 **P1 — Aceite científico delimitado.** Escrever explicitamente, na documentação do S01, a hipótese verificável, o objeto da verificação (software didático) e a condição para declarar *concluída a iteração v1 de software*, separada de metas futuras de hardware ou classificação causal.
 
@@ -50,7 +50,7 @@ A cadeia sintética `geração → registro dos bytes → validação CRC e sequ
 
 - **Aprovado:** continuar usando o S01 como base didática de geração, integridade e validação de pacotes sintéticos.
 - **Não aprovado:** declarar que o S01 valida FlatSat físico, GSE, RF, telemetria orbital, taxa real de perda ou acurácia de classificação causal.
-- **Status recomendado:** **Em desenvolvimento** até encerrar os itens P1 de documentação/evidência.
+- **Status recomendado:** **Em desenvolvimento**, pois resta formalizar a hipótese experimental e o aceite científico restrito à iteração v1. A preservação da evidência foi atendida posteriormente.
 - **Próximo incremento objetivo:** revisar e publicar **uma execução de referência estável**, acompanhada de manifesto com SHA-256 e link ao commit que a produziu. Não são necessárias integrações com hardware para concluir essa tarefa.
 
 > Este parecer baseia-se nos arquivos do repositório e nos registros de execução identificados acima. Uma execução bem-sucedida do mesmo software não demonstra, isoladamente, correção formal do algoritmo, independência científica do gabarito ou qualidade de dados reais.

@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "lab_id": "S01",
+  "reference_id": "s01-ci-reference-2026-11-19",
+  "data_origin": "synthetic",
+  "scope": "educational offline software simulation; no physical telemetry",
+  "archive_file": "s01-reference-2026-11-19.zip",
+  "archive_bytes": 12375,
+  "archive_sha256": "11986c730e4e9102b930dbbdca42fa4a04c36515204fc08f0830e73cdf3be47c",
+  "archive_contents_count": 19,
+  "source": {
+    "repository": "itamarsb/cubesat-flatsat-space-systems-lab",
+    "source_commit": "ac233f6ad9d227ef22c1b144350c1659722c9767",
+    "github_actions_run_id": 44628209124,
+    "github_actions_run_url": "https://github.com/itamarsb/cubesat-flatsat-space-systems-lab/actions/runs/44628209124",
+    "artifact_id": 14581060691,
+    "artifact_name": "s01-validation-44628209124",
+    "run_id": "s01-ci-reference",
+    "runtime": "GitHub-hosted Linux, Python 3.13.18",
+    "note": "ZIP bytes preserved exactly as downloaded from the GitHub Actions artifact; archive entries unmodified"
+  },
+  "observed_results": {
+    "unittest_tests_passed": 70,
+    "evaluation": {
+      "scenarios": 5,
+      "conformant": 5,
+      "deviation": 0,
+      "inconsistent": 0
+    },
+    "integrity": {
+      "scenarios": 5,
+      "verified": 5,
+      "failed": 0
+    },
+    "replay": {
+      "scenarios": 5,
+      "matched": 5,
+      "mismatch": 0,
+      "unverifiable": 0
+    }
+  },
+  "files": [
+    {
+      "path": "baseline/ground_truth.json",
+      "bytes": 542,
+      "sha256": "0b03e9a8b2dce5e84940c6c68c3f0689e1629a451cbe79b5617e5f196a0d2af8"
+    },
+    {
+      "path": "baseline/input_frames.json",
+      "bytes": 771,
+      "sha256": "fb42450fdbc873376e918925c53632360b288ed824fe94c19d512eb104eeb1b8"
+    },
+    {
+      "path": "baseline/observations.json",
+      "bytes": 1903,
+      "sha256": "ac21bd5cc621c1a82f00f5afc88ff4358c4c802a9b351ff7ff913d397e849ab6"
+    },
+    {
+      "path": "corrupt/ground_truth.json",
+      "bytes": 690,
+      "sha256": "c89d6a746c5fcaf58ec6a054b4befae863ee70ac75eba8b7a384bdc435d6c803"
+    },
+    {
+      "path": "corrupt/input_frames.json",
+      "bytes": 770,
+      "sha256": "b11da1d0ac2621092fcb161dca0e45bd5297ccc67ff95f5982d4f75130ac8782"
+    },
+    {
+      "path": "corrupt/observations.json",
+      "bytes": 1855,
+      "sha256": "d0fcb05ce06c6e49eaa615480381a6932336430891b05b79ed39b58cd0f0d4fe"
+    },
+    {
+      "path": "drop/ground_truth.json",
+      "bytes": 616,
+      "sha256": "e106e2700cccc912ba03481151c9c2bb4b91c053b07baa3c42fae5e48686e300"
+    },
+    {
+      "path": "drop/input_frames.json",
+      "bytes": 684,
+      "sha256": "43a4de8d52f8083415e9caedd660e7f904afe7c5dd3fc8cba5f44fdac519dded"
+    },
+    {
+      "path": "drop/observations.json",
+      "bytes": 1757,
+      "sha256": "fc04dff5038bb63074db7cd32a785afd55c84cb4a5bbff87491cb56f0efbde21"
+    },
+    {
+      "path": "duplicate/ground_truth.json",
+      "bytes": 610,
+      "sha256": "6b8eaf30013f8f6642400b3b4a9165be3c213d683afbeb3a00a6b3a17f6ca1f1"
+    },
+    {
+      "path": "duplicate/input_frames.json",
+      "bytes": 855,
+      "sha256": "3afa25ec4e15d4f7969b8e83f2a6ac103f477d19272b4d9d87ff90f67941f0c4"
+    },
+    {
+      "path": "duplicate/observations.json",
+      "bytes": 2042,
+      "sha256": "e517153e705fdbaf064c1925816022164132b8b6ef3498b0788f8dd8c7be4497"
+    },
+    {
+      "path": "evaluation.json",
+      "bytes": 3722,
+      "sha256": "3b5aae46557952ca7157a49349481f907a1a7e23dd9891261973957a6924b797"
+    },
+    {
+      "path": "evaluation_summary.md",
+      "bytes": 1378,
+      "sha256": "92ee2907a56dcf5ae1d3c02012c9c40c4f620d8fb6ad597ec32833f522ef9728"
+    },
+    {
+      "path": "evidence_verification.json",
+      "bytes": 1817,
+      "sha256": "fbfb348b5fdade297ba8d42c51a770210454506157ca0be6746ae19200772468"
+    },
+    {
+      "path": "reorder/ground_truth.json",
+      "bytes": 616,
+      "sha256": "41b2b95c32c4c10b6543c2b0eab5f413c7a601d371127cdc47f8d72395e6980d"
+    },
+    {
+      "path": "reorder/input_frames.json",
+      "bytes": 770,
+      "sha256": "9864f713867f28fdeae4d28751db37eb2f997697cbf723051c0f066662659f5b"
+    },
+    {
+      "path": "reorder/observations.json",
+      "bytes": 1901,
+      "sha256": "fab7314d9e9de549b12a4dcf12683ed9067694e25684f38ab5465cef3b126b13"
+    },
+    {
+      "path": "replay_verification.json",
+      "bytes": 1551,
+      "sha256": "026fce74934f3bcfc2f8c83a5b6fa26faa9463ed3b652d2497175c0787c2c069"
+    }
+  ],
+  "limitations": [
+    "SHA-256 checks detect uncoordinated changes but provide no cryptographic source authentication.",
+    "Replaying frames uses the same packet decoder and sequence tracker, not an independent reference implementation.",
+    "The test is purely synthetic: no satellite, FlatSat hardware, RF/serial link, or measured physical losses.",
+    "Omitted pre-receiver frames are not present in archived receiver inputs.",
+    "The frozen snapshot applies only to the source commit and is not evidence for subsequent code changes."
+  ]
+}

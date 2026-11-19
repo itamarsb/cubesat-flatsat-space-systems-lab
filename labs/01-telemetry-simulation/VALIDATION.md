@@ -148,6 +148,29 @@ compara aos registros produzidos durante a execução original. Sua concordânci
 `packet.py` e `SequenceTracker`. Ensaios com hardware real, fontes externas
 e avaliação de diagnóstico independente permanecem fora deste resultado.
 
+## Evidência de referência durável — snapshot da execução de 19/11/2026
+
+A referência original `s01-validation-44628209124` foi inspecionada
+quanto a credenciais e dados pessoais e preservada como ZIP **sem modificar
+nenhum de seus 19 arquivos**, em
+[`evidence/reference-v1/`](evidence/reference-v1/README.md).
+
+O manifesto `manifest.json` armazena: identificadores da execução,
+commit de origem, SHA-256 do ZIP e o hash/tamanho de cada arquivo.
+O script `verify_reference_snapshot.py` valida o ZIP e permite reconstruir
+os hashes dos quadros preservados sem consultar o gerador, além de conferir
+os contadores dos três relatórios de avaliação.
+
+A execução original registrou **70 testes aprovados**, cinco auditorias de
+integridade, cinco replays correspondentes e cinco avaliações conformes.
+Os arquivos são evidências de **software sintético**, não demonstram
+características de satélite, RF, hardware ou capacidade de atribuir
+causas reais de falhas.
+
+A verificação do snapshot na CI atual deve ser vinculada a uma execução
+efetivamente aprovada; o commit de origem continuará identificado
+separadamente dos commits posteriores que preservaram esses resultados.
+
 ## Critérios de aceite
 
 1. A suíte `unittest` passa sem falhas.

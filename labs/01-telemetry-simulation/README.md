@@ -132,6 +132,24 @@ Os dois arquivos compartilham `run_id`, `scenario_id` e `checksums.input_frames_
 
 O registro de verdade é independente do diagnóstico quanto ao fluxo de dados, mas ambas as partes executam no mesmo processo de simulação e ainda não constituem validação externa ou referência experimental independente. A análise comparativa com métricas de acerto por classe fica para uma etapa posterior.
 
+### Evidência de referência preservada no Git
+
+Uma cópia imutável por commit do arquivo ZIP original da execução aprovada
+`s01-ci-reference` (19 arquivos sintéticos) está em
+[`evidence/reference-v1/`](evidence/reference-v1/README.md).
+O `manifest.json` registra SHA-256 do ZIP e de cada arquivo, além do
+commit de origem, da execução e do artefato do GitHub Actions. Essa
+preservação é independente da expiração temporária do artefato em Actions.
+
+Para conferir o snapshot preservado:
+
+```bash
+python verify_reference_snapshot.py
+```
+
+O snapshot conserva somente resultados de software sintético e **não**
+representa execução de bancada física ou telemetria de satélite real.
+
 ### Reverificação dos quadros arquivados
 
 Após gerar uma nova execução com `run_scenarios.py`, verifique o SHA-256
@@ -248,7 +266,7 @@ Esses resultados demonstram comportamento do **software de simulação**, não d
 - [x] Registrar uma execução sintética de referência em JSON com contadores e SHA-256.
 - [x] Formalizar cenários sintéticos independentes com parâmetros, `run_id` e relatórios JSON persistidos localmente.
 - [x] Separar gabarito do gerador e observações do receptor, vinculando-os por SHA-256.
-- [ ] Revisar e publicar evidências representativas dos ensaios, com proveniência e limitações.
+- [x] Revisar e publicar evidência representativa original dos cinco cenários com manifesto SHA-256 ([referência v1](evidence/reference-v1/README.md)).
 - [x] Implementar teste de integração de geração → observação → avaliação e fluxo CI reexecutável.
 - [x] Verificar a execução de CI com 49 testes e cinco cenários conformes (19/11/2026).
 - [x] Acrescentar preservação de quadros pós-intervenção e auditoria SHA-256 dos bytes em novas execuções.
