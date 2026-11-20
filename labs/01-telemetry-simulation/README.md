@@ -1,6 +1,8 @@
 # S01 — Simulação e integridade da telemetria
 
-**Situação:** Em desenvolvimento — implementação e cenários controlados de software testados.
+**Situação:** Em desenvolvimento — iteração v1 de software aceita tecnicamente para simulação sintética determinística; integração física e extensões continuam fora deste aceite.
+
+**Aceite da v1:** [hipótese, requisitos, resultados e decisão técnica](ACCEPTANCE.md). O aceite da versão de software não equivale à conclusão do laboratório S01.
 
 ## Objetivo
 
@@ -275,9 +277,10 @@ Esses resultados demonstram comportamento do **software de simulação**, não d
 - [x] Publicar política explícita de expectativas e avaliação da conformidade para os cinco cenários de software.
 - [x] Implementar replay dos quadros arquivados e comparar eventos e contadores do receptor.
 - [x] Confirmar o replay em execução aprovada do GitHub Actions (19/11/2026: 70 testes e 5/5 replays correspondentes).
+- [x] Formalizar hipótese verificável, matriz de requisitos e aceite técnico restrito da iteração v1 em [ACCEPTANCE.md](ACCEPTANCE.md).
 - [ ] Realizar estudo comparativo com múltiplas replicações e método independente adequado à detecção de causas.
 - [ ] Avaliar a integração futura com GSE, observabilidade e injeção controlada de falhas.
 
-O **S01 permanece em desenvolvimento**. A conclusão do laboratório exige resultados e evidências do protocolo experimental completo, não apenas a existência de código e testes unitários.
+O **S01 permanece em desenvolvimento**. A **v1 de software** teve seu aceite técnico registrado em [ACCEPTANCE.md](ACCEPTANCE.md), com alcance limitado à simulação local; estudos independentes e integrações físicas são futuras etapas, não resultados desta versão.
 
 [Todos os laboratórios](../README.md) · [Método experimental](../../docs/experimental-method.md) · [Arquitetura](../../docs/architecture.md)

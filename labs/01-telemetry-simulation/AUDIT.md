@@ -46,6 +46,23 @@ A cadeia sintética `geração → registro dos bytes → validação CRC e sequ
 
 **P3 — Limpeza documental de baixo impacto.** Verificar o arquivo placeholder `images` no diretório do S01 (não é um diretório de imagens) e melhorar pequenas redações históricas que possam sugerir pendência de uma execução CI já validada. Não altera resultados.
 
+## Atualização da auditoria — 20/11/2026
+
+As duas pendências prioritárias identificadas na auditoria inicial foram
+tratadas posteriormente: o conjunto de evidências foi preservado no Git em
+[`evidence/reference-v1/`](evidence/reference-v1/README.md), com manifesto
+e verificador; a hipótese funcional e os critérios de aceite da v1 foram
+consolidados em [`ACCEPTANCE.md`](ACCEPTANCE.md).
+
+O parecer atualizado **aceita a iteração v1 de software** para ensaios
+sintéticos determinísticos. O laboratório S01 continua **Em desenvolvimento**;
+não se declaram atingidos os objetivos futuros de hardware, GSE, RF,
+observabilidade integrada ou avaliação estatística de diagnóstico.
+
+As observações e decisões históricas abaixo descrevem a situação
+na data original da auditoria; a atualização acima não reescreve
+retroativamente os resultados ou o escopo da execução.
+
 ## Decisão sobre o encerramento
 
 - **Aprovado:** continuar usando o S01 como base didática de geração, integridade e validação de pacotes sintéticos.
