@@ -6,7 +6,7 @@
 
 | Lab | Tema | Entregável de referência | Status |
 |:---:|:---:|:---:|:---:|
-| S00 | Baseline de bancada | Diagrama, inventário, interfaces, riscos, critérios de aceite | Planejado |
+| S00 | Baseline de bancada | Diagrama, inventário, interfaces, riscos, critérios de aceite | Planejado — documentação inicial |
 | S01 | Simulação de telemetria | Pacotes com versão e sequência, verificação de integridade, testes determinísticos | Em desenvolvimento — software verificado |
 | S02 | FlatSat embarcado | Firmware STM32/ESP32, leituras de sensores, captura serial, comparação com referência | Planejado |
 | S03 | Ground Support Equipment | Receptor, validação de quadros, armazenamento e rastreabilidade | Planejado |

@@ -27,7 +27,7 @@ O projeto prevê a utilização de um **FlatSat** — montagem de subsistemas el
 
 | Lab | Tema | Estado |
 |:---:|:---:|:---:|
-| [S00](labs/00-bench-baseline/README.md) | Requisitos, instrumentos e arquitetura da bancada | Planejado |
+| [S00](labs/00-bench-baseline/README.md) | Requisitos, instrumentos e arquitetura da bancada | Planejado — documentação inicial |
 | [S01](labs/01-telemetry-simulation/README.md) | Simulação e integridade de pacotes de telemetria | Em desenvolvimento — software testado |
 | [S02](labs/02-embedded-flatsat/README.md) | FlatSat com microcontrolador e aquisição de sensores | Planejado |
 | [S03](labs/03-ground-segment/README.md) | Ground Support Equipment (GSE) e recepção | Planejado |
