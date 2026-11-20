@@ -30,6 +30,10 @@ Esta primeira iteração é **exclusivamente uma simulação local em Python**. 
 | `tests/test_evaluate_scenarios.py` | Testes de conformidade, divergência, inconsistência e bloqueio de sobrescrita |
 | `tests/test_experiment.py` | Testes do relatório, contadores, SHA-256 e proteção contra sobrescrita |
 | `tests/test_packet.py` | Testes automatizados offline com a biblioteca padrão `unittest` |
+| `tests/test_integration.py` | Exercita o fluxo completo de geração, auditoria e avaliação |
+| `verify_reference_snapshot.py` | Confere o ZIP de referência preservado e o manifesto dos 19 arquivos |
+| `tests/test_reference_snapshot.py` | Testes de integridade, ausência e alteração de dados do snapshot |
+| `ACCEPTANCE.md` | Requisitos de aceite da v1 e parecer técnico delimitado |
 
 ### Quadro experimental v1
 
@@ -128,7 +132,7 @@ A saída padrão é `run-artifacts/<run_id>/<scenario>/`, contendo:
 - `ground_truth.json` — metadados da geração e a intervenção controlada conhecida **somente pelo gerador**;
 - `input_frames.json` — representação hexadecimal dos **quadros realmente apresentados ao receptor**, na ordem recebida e após a intervenção sintética.
 
-Os dois arquivos compartilham `run_id`, `scenario_id` e `checksums.input_frames_sha256`, para auditoria do mesmo conjunto ordenado de quadros. Os resultados são gravados em novos diretórios de execução; um `run_id` existente provoca erro, sem sobrescrever os arquivos anteriores. O diretório padrão `run-artifacts/` é ignorado pelo Git.
+Os três arquivos compartilham `run_id` e `scenario_id`; os arquivos de observações e gabarito registram o mesmo `checksums.input_frames_sha256`, que pode ser recalculado a partir de `input_frames.json`. Os resultados são gravados em novos diretórios de execução; um `run_id` existente provoca erro, sem sobrescrever os arquivos anteriores. O diretório padrão `run-artifacts/` é ignorado pelo Git.
 
 **Interpretação científica:** a lacuna detectada em `reorder` não deve ser contabilizada como perda efetiva; já em `drop` a omissão é comprovada apenas pelo gabarito do gerador, não pela observação do receptor. A corrupção demonstra rejeição por CRC, mas não identifica, isoladamente, a causa física de uma alteração. O hash é uma verificação de integridade/reprodutibilidade, não uma comprovação de autenticidade.
 
@@ -210,8 +214,7 @@ comprova perda física. Consulte [VALIDATION.md](VALIDATION.md).
 O teste `tests/test_integration.py` executa os próprios comandos de geração e avaliação
 em diretórios temporários. Valida os cinco cenários reais, verifica hashes cruzados,
 proteção contra sobrescrita e a diferenciação entre divergência e inconsistência.
-Foi corrigido o caminho da política nos testes do avaliador para apontar ao diretório
-raiz deste laboratório.
+Os testes utilizam a política do diretório raiz do S01 e executam os programas reais em diretórios temporários.
 
 O workflow de CI do GitHub Actions (`.github/workflows/s01-validation.yml`) executa a
 suíte e uma geração/avaliação integrada usando Python 3.13. A configuração prevê
@@ -247,17 +250,23 @@ Escolha outro identificador em execuções futuras. O avaliador não sobrescreve
 
 **Limitações:** a auditoria externa dos bytes é possível apenas em novas execuções que preservam `input_frames.json`; execuções anteriores não continham esse arquivo. Gerador e receptor têm fluxos de dados distintos, mas compartilham uma única simulação. Não há evidências de enlace RF ou hardware nem classificação cega da causa. A lacuna em `reorder` não implica perda real. Os cinco casos didáticos não permitem estimar sensibilidade, precisão, recall ou acurácia de um classificador.
 
-Foram executados localmente **14 novos testes automatizados (14/14)** com fixtures JSON representativas, incluindo os três vereditos e a prevenção de sobrescrita. A execução integrada dos programas com novos relatórios deve ser reproduzida no ambiente do leitor usando os comandos acima.
+## Validação atual e rastreabilidade
 
-## Validação desta iteração
+A versão v1 de software foi aceita tecnicamente, restrita à **simulação
+local e determinística**, conforme a matriz de requisitos em
+[`ACCEPTANCE.md`](ACCEPTANCE.md).
 
-Em ambiente de desenvolvimento com **Python 3.13.5**, foram executados **13 testes automatizados**, com resultado **OK (13/13)**. A execução local de `demo.py` produziu, na ordem, os estados `first`, `in_order`, `gap` (1 quadro estimado), `duplicate`, `out_of_order` e `in_order`, além da rejeição de um quadro corrompido com `CRC mismatch`.
+Na execução [GitHub Actions #44836681935](https://github.com/itamarsb/cubesat-flatsat-space-systems-lab/actions/runs/44836681935),
+associada ao commit `75a8a7bb166fe76cbec691c251a70c5a36ea49a8`, foram
+aprovados **76 testes automatizados**, com cinco cenários conformes,
+cinco verificações de integridade e cinco replays correspondentes.
+Também foi validado o snapshot de 19 arquivos preservado no Git.
 
-Com o registro JSON, mais **6 testes automatizados** foram adicionados; a suíte conjunta foi executada em Python 3.13.5 e aprovou **19/19 testes**. A geração do relatório e a recusa de sobrescrita também foram verificadas localmente.
-
-Nesta etapa, foram adicionados **12 testes** para os cenários independentes. A suíte completa foi executada localmente em Python 3.13.5: **31 testes aprovados (31/31)**. Também foi executado o comando `run_scenarios.py` com os cinco cenários e verificada a geração dos arquivos, a correspondência dos hashes e a recusa de sobrescrita.
-
-Esses resultados demonstram comportamento do **software de simulação**, não desempenho de telemetria espacial ou de uma transmissão real. O teste deve ser repetido no ambiente de quem reproduzir o laboratório.
+O procedimento completo, as referências às execuções anteriores e suas
+limitações estão documentados em [`VALIDATION.md`](VALIDATION.md).
+Os marcos anteriores da implementação (13, 19, 31 e outros totais de testes)
+permanecem consultáveis no histórico de commits e registros de validação.
+Nenhum desses números representa ensaios físicos ou validação estatística.
 
 ## Próximas etapas e critério de conclusão
 
